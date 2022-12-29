@@ -29,6 +29,7 @@ const SurveySheet = ({ sheetsData, setSheetsData }: SheetProps) => {
 			columnLabels={points.map((point) => point.toString())}
 			rowLabels={stations}
 			data={sheet}
+			//@ts-ignore
 			onChange={setSheet}
 			darkMode
 		/>
