@@ -72,6 +72,7 @@ const StationsForm = ({ setSheetsData }: StationsFormProps) => {
 						key={station}
 						name={station}
 						pattern="[0-9.]+"
+						inputMode="numeric"
 						required
 						id={station}
 						onChange={handleChange}

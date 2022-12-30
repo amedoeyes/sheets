@@ -2,12 +2,12 @@ import { Navigate, useParams } from "react-router-dom";
 import { Spreadsheet } from "react-spreadsheet";
 import { SheetData } from "../App";
 
-type SheetProps = {
+type SurveySheetProps = {
 	sheetsData: SheetData[];
 	setSheetsData: React.Dispatch<React.SetStateAction<SheetData[]>>;
 };
 
-const SurveySheet = ({ sheetsData, setSheetsData }: SheetProps) => {
+const SurveySheet = ({ sheetsData, setSheetsData }: SurveySheetProps) => {
 	const { title } = useParams();
 
 	if (!sheetsData.some((sheetData) => sheetData.title === title))

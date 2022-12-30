@@ -18,7 +18,7 @@ const FormInput: React.FC<FormInputProps> = ({
 				id={id}
 				{...rest}
 			/>
-			<p className="text-red-400">{message}</p>
+			{message && <p className="text-red-400">{message}</p>}
 		</div>
 	);
 };
