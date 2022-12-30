@@ -1,9 +1,11 @@
+import React from "react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { SheetData } from "../App";
 import FormButton from "../components/FormButton";
 import FormInput from "../components/FormInput";
 import HeaderText from "../components/HeaderText";
 import useFormReducer from "../hooks/useFormReducer";
+import useFormValidity from "../hooks/useFormValidity";
 
 type LocationState = {
 	title: string;
@@ -32,13 +34,32 @@ const StationsForm = ({ setSheetsData }: StationsFormProps) => {
 		{}
 	);
 
-	const [state, dispatch, Enum] = useFormReducer(stationsStates);
+	const stationsErrors = stations.reduce(
+		(acc: { [key: string]: string }, station) => ({
+			...acc,
+			[station]: "",
+		}),
+		{}
+	);
 
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+	const [state, dispatch, Enum] = useFormReducer(stationsStates);
+	const [errors, setErrors] = useFormValidity(stationsErrors);
+
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setErrors(e.target.id, "");
 		dispatch({
 			type: Enum.CHANGE_VALUE,
 			payload: { key: e.target.id, value: Number(e.target.value) },
 		});
+	};
+
+	const handleInvalid = (e: React.InvalidEvent<HTMLInputElement>) => {
+		let error = "";
+
+		if (e.target.validity.valueMissing) error = "Required";
+
+		setErrors(e.target.id, error);
+	};
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
@@ -76,6 +97,8 @@ const StationsForm = ({ setSheetsData }: StationsFormProps) => {
 						required
 						id={station}
 						onChange={handleChange}
+						message={errors[station]}
+						onInvalid={handleInvalid}
 					/>
 				))}
 				<FormButton className="col-span-2">Create Sheet</FormButton>
