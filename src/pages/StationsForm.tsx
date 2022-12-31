@@ -42,15 +42,13 @@ const StationsForm = ({ setSheetsData }: StationsFormProps) => {
 		{}
 	);
 
-	const [state, dispatch, Enum] = useFormReducer(stationsStates);
-	const [errors, setErrors] = useFormValidity(stationsErrors);
+	const [value, setValue] = useFormReducer(stationsStates);
+	const [errors, setErrors] = useFormReducer(stationsErrors);
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setErrors(e.target.id, "");
-		dispatch({
-			type: Enum.CHANGE_VALUE,
-			payload: { key: e.target.id, value: Number(e.target.value) },
-		});
+
+		setValue(e.target.id, Number(e.target.value));
 	};
 
 	const handleInvalid = (e: React.InvalidEvent<HTMLInputElement>) => {
@@ -66,7 +64,13 @@ const StationsForm = ({ setSheetsData }: StationsFormProps) => {
 
 		const sheet: { value: number }[][] = stations.map((station) =>
 			points.map((point) => ({
-				value: level - state[station] + (point / 100) * inclination,
+				value: Number(
+					(
+						level -
+						value[station] +
+						(point / 100) * inclination
+					).toFixed(2)
+				),
 			}))
 		);
 

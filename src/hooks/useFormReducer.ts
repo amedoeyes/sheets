@@ -24,6 +24,16 @@ function useFormReducer<T>(initialStates: T) {
 
 	const [state, dispatch] = useReducer(reducer, initialStates);
 
-	return [state, dispatch, Enum] as const;
+	const setState = (key: string, value: T[keyof T]) =>
+		dispatch({
+			type: Enum.CHANGE_VALUE,
+			payload: {
+				key: key,
+				value: value,
+			},
+		});
+
+	return [state, setState] as const;
 }
+
 export default useFormReducer;

@@ -31,7 +31,6 @@ const SurveySheet = ({ sheetsData, setSheetsData }: SurveySheetProps) => {
 			data={sheet}
 			//@ts-ignore
 			onChange={setSheet}
-			darkMode
 		/>
 	);
 };

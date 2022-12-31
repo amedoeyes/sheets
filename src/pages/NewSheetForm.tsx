@@ -4,7 +4,6 @@ import FormButton from "../components/FormButton";
 import FormInput from "../components/FormInput";
 import HeaderText from "../components/HeaderText";
 import useFormReducer from "../hooks/useFormReducer";
-import useFormValidity from "../hooks/useFormValidity";
 
 type NewSheetFormProps = {
 	sheetsData: SheetData[];
@@ -12,7 +11,7 @@ type NewSheetFormProps = {
 
 const NewSheetForm = ({ sheetsData }: NewSheetFormProps) => {
 	const navigate = useNavigate();
-	const [state, dispatch, Enum] = useFormReducer({
+	const [value, setValue] = useFormReducer({
 		title: "",
 		startStation: 0,
 		endStation: 0,
@@ -24,8 +23,7 @@ const NewSheetForm = ({ sheetsData }: NewSheetFormProps) => {
 		benchmark: 0,
 		thickness: 0,
 	});
-
-	const [errors, setErrors] = useFormValidity({
+	const [message, setMessage] = useFormReducer({
 		title: "",
 		startStation: "",
 		endStation: "",
@@ -38,64 +36,52 @@ const NewSheetForm = ({ sheetsData }: NewSheetFormProps) => {
 		thickness: "",
 	});
 
-	const handleInvalid = (e: React.InvalidEvent<HTMLInputElement>) => {
-		let error: string = "";
-
-		if (e.target.validity.valueMissing) error = "Required";
-
-		setErrors(e.target.id, error);
-	};
-
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setErrors(e.target.id, "");
+		setMessage(e.target.id, "");
+
+		if (sheetsData.some((sheetData) => sheetData.title === e.target.value))
+			return setMessage("title", "Title must be unique");
+
+		if (e.target.validity.valueMissing) setMessage(e.target.id, "Required");
 
 		const value =
 			e.target.id === "title" ? e.target.value : Number(e.target.value);
 
-		dispatch({
-			type: Enum.CHANGE_VALUE,
-			payload: {
-				key: e.target.id,
-				value: value,
-			},
-		});
+		setValue(e.target.id, value);
 	};
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
 
-		if (sheetsData.some((sheetData) => sheetData.title === state.title))
-			return setErrors("title", "Title Must be unique");
-
 		const stations = Array.from(
-			Array((state.endStation - state.startStation) / 20 + 1),
+			Array((value.endStation - value.startStation) / 20 + 1),
 			(_, index) =>
-				(state.startStation + index * 20)
+				(value.startStation + index * 20)
 					.toLocaleString()
 					.replace(",", "+")
 		);
 
 		const points = Array.from(
-			Array(Math.ceil(state.sectionWidth / state.pointsWidth) + 1),
+			Array(Math.ceil(value.sectionWidth / value.pointsWidth) + 1),
 			(_, index) =>
-				index * state.pointsWidth > state.sectionWidth
-					? state.sectionWidth -
-					  index * state.pointsWidth +
-					  index * state.pointsWidth
-					: index * state.pointsWidth
+				index * value.pointsWidth > value.sectionWidth
+					? value.sectionWidth -
+					  index * value.pointsWidth +
+					  index * value.pointsWidth
+					: index * value.pointsWidth
 		);
 
-		if (state.offset) points.unshift(state.offset);
+		if (value.offset) points.unshift(value.offset);
 
-		const level = state.backsight + state.benchmark + state.thickness;
+		const level = value.backsight + value.benchmark + value.thickness;
 
 		navigate("stations", {
 			state: {
-				title: state.title,
+				title: value.title,
 				stations: stations,
 				points: points,
-				sectionWidth: state.sectionWidth,
-				inclination: state.inclination,
+				sectionWidth: value.sectionWidth,
+				inclination: value.inclination,
 				level: level,
 			},
 			replace: true,
@@ -114,8 +100,7 @@ const NewSheetForm = ({ sheetsData }: NewSheetFormProps) => {
 					required
 					id="title"
 					onChange={handleChange}
-					message={errors.title}
-					onInvalid={handleInvalid}
+					message={message.title}
 				/>
 				<div className="flex gap-4">
 					<FormInput
@@ -125,8 +110,7 @@ const NewSheetForm = ({ sheetsData }: NewSheetFormProps) => {
 						required
 						id="startStation"
 						onChange={handleChange}
-						message={errors.startStation}
-						onInvalid={handleInvalid}
+						message={message.startStation}
 					/>
 					<FormInput
 						name="End Stations"
@@ -135,8 +119,7 @@ const NewSheetForm = ({ sheetsData }: NewSheetFormProps) => {
 						required
 						id="endStation"
 						onChange={handleChange}
-						message={errors.startStation}
-						onInvalid={handleInvalid}
+						message={message.endStation}
 					/>
 				</div>
 				<div className="flex gap-4">
@@ -147,8 +130,7 @@ const NewSheetForm = ({ sheetsData }: NewSheetFormProps) => {
 						required
 						id="pointsWidth"
 						onChange={handleChange}
-						message={errors.endStation}
-						onInvalid={handleInvalid}
+						message={message.pointsWidth}
 					/>
 					<FormInput
 						name="Section Width"
@@ -157,8 +139,7 @@ const NewSheetForm = ({ sheetsData }: NewSheetFormProps) => {
 						required
 						id="sectionWidth"
 						onChange={handleChange}
-						message={errors.sectionWidth}
-						onInvalid={handleInvalid}
+						message={message.sectionWidth}
 					/>
 				</div>
 				<div className="flex gap-4">
@@ -168,8 +149,7 @@ const NewSheetForm = ({ sheetsData }: NewSheetFormProps) => {
 						inputMode="numeric"
 						id="offset"
 						onChange={handleChange}
-						message={errors.offset}
-						onInvalid={handleInvalid}
+						message={message.offset}
 					/>
 					<FormInput
 						name="Inclination"
@@ -177,8 +157,7 @@ const NewSheetForm = ({ sheetsData }: NewSheetFormProps) => {
 						inputMode="numeric"
 						id="inclination"
 						onChange={handleChange}
-						message={errors.inclination}
-						onInvalid={handleInvalid}
+						message={message.inclination}
 					/>
 				</div>
 				<div className="flex gap-4">
@@ -189,8 +168,7 @@ const NewSheetForm = ({ sheetsData }: NewSheetFormProps) => {
 						required
 						id="backsight"
 						onChange={handleChange}
-						message={errors.backsight}
-						onInvalid={handleInvalid}
+						message={message.backsight}
 					/>
 					<FormInput
 						name="Benchmark"
@@ -199,8 +177,7 @@ const NewSheetForm = ({ sheetsData }: NewSheetFormProps) => {
 						required
 						id="benchmark"
 						onChange={handleChange}
-						message={errors.benchmark}
-						onInvalid={handleInvalid}
+						message={message.benchmark}
 					/>
 					<FormInput
 						name="Thickness"
@@ -208,8 +185,7 @@ const NewSheetForm = ({ sheetsData }: NewSheetFormProps) => {
 						inputMode="numeric"
 						id="thickness"
 						onChange={handleChange}
-						message={errors.thickness}
-						onInvalid={handleInvalid}
+						message={message.thickness}
 					/>
 				</div>
 				<FormButton>Next</FormButton>
