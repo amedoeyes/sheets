@@ -1,87 +1,120 @@
 import { useNavigate } from "react-router-dom";
-import { SheetData } from "../App";
 import FormButton from "../components/FormButton";
 import FormInput from "../components/FormInput";
 import HeaderText from "../components/HeaderText";
 import useFormReducer from "../hooks/useFormReducer";
+import { z } from "zod";
 
-type NewSheetFormProps = {
-	sheetsData: SheetData[];
-};
-
-const NewSheetForm = ({ sheetsData }: NewSheetFormProps) => {
+const NewSheetForm = () => {
 	const navigate = useNavigate();
-	const [value, setValue] = useFormReducer({
-		title: "",
-		startStation: 0,
-		endStation: 0,
-		pointsWidth: 0,
-		sectionWidth: 0,
-		offset: 0,
-		inclination: 0,
-		backsight: 0,
-		benchmark: 0,
-		thickness: 0,
+	const FormValues = z.object({
+		title: z.object({ value: z.string().min(1, { message: "Required" }) }),
+		startStation: z.object({
+			value: z.number().refine((value) => value % 20 === 0, {
+				message: "Must be dividable by 20",
+			}),
+		}),
+		endStation: z.object({
+			value: z
+				.number()
+				.min(1, { message: "Required" })
+				.refine((value) => value % 20 === 0, {
+					message: "Must be dividable by 20",
+				}),
+		}),
+		pointsWidth: z.object({
+			value: z.number().min(1, { message: "Required" }),
+		}),
+		sectionWidth: z.object({
+			value: z.number().min(1, { message: "Required" }),
+		}),
+		offset: z.object({
+			value: z.number().optional(),
+		}),
+
+		slope: z.object({
+			value: z.number().optional(),
+		}),
+
+		backsight: z.object({
+			value: z.number().min(1, { message: "Required" }),
+		}),
+		benchmark: z.object({
+			value: z.number().min(1, { message: "Required" }),
+		}),
+		thickness: z.object({
+			value: z.number().optional(),
+		}),
 	});
-	const [message, setMessage] = useFormReducer({
-		title: "",
-		startStation: "",
-		endStation: "",
-		pointsWidth: "",
-		sectionWidth: "",
-		offset: "",
-		inclination: "",
-		backsight: "",
-		benchmark: "",
-		thickness: "",
+
+	const [form, setForm] = useFormReducer({
+		title: { value: "", message: "" },
+		startStation: { value: 0, message: "" },
+		endStation: { value: 0, message: "" },
+		pointsWidth: { value: 0, message: "" },
+		sectionWidth: { value: 0, message: "" },
+		offset: { value: 0, message: "" },
+		slope: { value: 0, message: "" },
+		backsight: { value: 0, message: "" },
+		benchmark: { value: 0, message: "" },
+		thickness: { value: 0, message: "" },
 	});
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setMessage(e.target.id, "");
+		if (e.target.inputMode === "numeric")
+			return setForm(e.target.id, {
+				value: Number(e.target.value),
+				message: "",
+			});
 
-		if (sheetsData.some((sheetData) => sheetData.title === e.target.value))
-			return setMessage("title", "Title must be unique");
-
-		if (e.target.validity.valueMissing) setMessage(e.target.id, "Required");
-
-		const value =
-			e.target.id === "title" ? e.target.value : Number(e.target.value);
-
-		setValue(e.target.id, value);
+		return setForm(e.target.id, { value: e.target.value, message: "" });
 	};
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
 
+		const validate = FormValues.safeParse(form);
+
+		if (!validate.success)
+			return validate.error.issues.forEach((issue) =>
+				setForm(issue.path[0].toString(), {
+					...form[issue.path[0].toString() as keyof typeof form],
+					message: issue.message,
+				})
+			);
+
 		const stations = Array.from(
-			Array((value.endStation - value.startStation) / 20 + 1),
+			Array((form.endStation.value - form.startStation.value) / 20 + 1),
 			(_, index) =>
-				(value.startStation + index * 20)
+				(form.startStation.value + index * 20)
 					.toLocaleString()
 					.replace(",", "+")
 		);
 
 		const points = Array.from(
-			Array(Math.ceil(value.sectionWidth / value.pointsWidth) + 1),
+			Array(
+				Math.ceil(form.sectionWidth.value / form.pointsWidth.value) + 1
+			),
 			(_, index) =>
-				index * value.pointsWidth > value.sectionWidth
-					? value.sectionWidth -
-					  index * value.pointsWidth +
-					  index * value.pointsWidth
-					: index * value.pointsWidth
+				index * form.pointsWidth.value > form.sectionWidth.value
+					? form.sectionWidth.value -
+					  index * form.pointsWidth.value +
+					  index * form.pointsWidth.value
+					: index * form.pointsWidth.value
 		);
 
-		if (value.offset) points.unshift(value.offset);
+		if (form.offset.value) points.unshift(form.offset.value);
 
-		const level = value.backsight + value.benchmark + value.thickness;
+		const level =
+			form.backsight.value + form.benchmark.value + form.thickness.value;
 
 		navigate("stations", {
 			state: {
-				title: value.title,
+				title: form.title.value,
 				stations: stations,
 				points: points,
-				sectionWidth: value.sectionWidth,
-				inclination: value.inclination,
+				sectionWidth: form.sectionWidth.value,
+				slope: form.slope.value,
 				level: level,
 			},
 			replace: true,
@@ -97,29 +130,26 @@ const NewSheetForm = ({ sheetsData }: NewSheetFormProps) => {
 			>
 				<FormInput
 					name="Title"
-					required
 					id="title"
 					onChange={handleChange}
-					message={message.title}
+					message={form.title.message}
 				/>
 				<div className="flex gap-4">
 					<FormInput
 						name="Start Stations"
 						pattern="[0-9.-]+"
 						inputMode="numeric"
-						required
 						id="startStation"
 						onChange={handleChange}
-						message={message.startStation}
+						message={form.startStation.message}
 					/>
 					<FormInput
 						name="End Stations"
 						pattern="[0-9.-]+"
 						inputMode="numeric"
-						required
 						id="endStation"
 						onChange={handleChange}
-						message={message.endStation}
+						message={form.endStation.message}
 					/>
 				</div>
 				<div className="flex gap-4">
@@ -127,19 +157,17 @@ const NewSheetForm = ({ sheetsData }: NewSheetFormProps) => {
 						name="Points Width"
 						pattern="[0-9.-]+"
 						inputMode="numeric"
-						required
 						id="pointsWidth"
 						onChange={handleChange}
-						message={message.pointsWidth}
+						message={form.pointsWidth.message}
 					/>
 					<FormInput
 						name="Section Width"
 						pattern="[0-9.-]+"
 						inputMode="numeric"
-						required
 						id="sectionWidth"
 						onChange={handleChange}
-						message={message.sectionWidth}
+						message={form.sectionWidth.message}
 					/>
 				</div>
 				<div className="flex gap-4">
@@ -149,15 +177,15 @@ const NewSheetForm = ({ sheetsData }: NewSheetFormProps) => {
 						inputMode="numeric"
 						id="offset"
 						onChange={handleChange}
-						message={message.offset}
+						message={form.offset.message}
 					/>
 					<FormInput
-						name="Inclination"
+						name="Slope"
 						pattern="[0-9.-]+"
 						inputMode="numeric"
-						id="inclination"
+						id="slope"
 						onChange={handleChange}
-						message={message.inclination}
+						message={form.slope.message}
 					/>
 				</div>
 				<div className="flex gap-4">
@@ -165,19 +193,17 @@ const NewSheetForm = ({ sheetsData }: NewSheetFormProps) => {
 						name="Backsight"
 						pattern="[0-9.-]+"
 						inputMode="numeric"
-						required
 						id="backsight"
 						onChange={handleChange}
-						message={message.backsight}
+						message={form.backsight.message}
 					/>
 					<FormInput
 						name="Benchmark"
 						pattern="[0-9.-]+"
 						inputMode="numeric"
-						required
 						id="benchmark"
 						onChange={handleChange}
-						message={message.benchmark}
+						message={form.benchmark.message}
 					/>
 					<FormInput
 						name="Thickness"
@@ -185,7 +211,7 @@ const NewSheetForm = ({ sheetsData }: NewSheetFormProps) => {
 						inputMode="numeric"
 						id="thickness"
 						onChange={handleChange}
-						message={message.thickness}
+						message={form.thickness.message}
 					/>
 				</div>
 				<FormButton>Next</FormButton>

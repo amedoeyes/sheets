@@ -1,18 +1,14 @@
 import { useReducer } from "react";
 
 function useFormReducer<T>(initialStates: T) {
-	enum Enum {
-		CHANGE_VALUE = "CHANGE_VALUE",
-	}
-
 	type Action = {
-		type: Enum;
+		type: string;
 		payload: { key: string; value: T[keyof T] };
 	};
 
 	const reducer = (state: T, action: Action) => {
 		switch (action.type) {
-			case Enum.CHANGE_VALUE:
+			case "update":
 				return {
 					...state,
 					[action.payload.key]: action.payload.value,
@@ -26,7 +22,7 @@ function useFormReducer<T>(initialStates: T) {
 
 	const setState = (key: string, value: T[keyof T]) =>
 		dispatch({
-			type: Enum.CHANGE_VALUE,
+			type: "update",
 			payload: {
 				key: key,
 				value: value,

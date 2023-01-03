@@ -1,4 +1,4 @@
-export function useDate(date: Date) {
+export default function useDate(date: Date) {
 	const newDate = new Date(date);
 	const locale = navigator.language;
 	const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;

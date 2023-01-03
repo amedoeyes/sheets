@@ -6,6 +6,7 @@ import SurveySheet from "./pages/SurveySheet";
 import { useLocalStorage } from "./hooks/useLocaleStorage";
 
 export type SheetData = {
+	id: string;
 	title: string;
 	creationDate: Date;
 	stations: string[];
@@ -21,17 +22,22 @@ const App = () => {
 
 	return (
 		<Routes>
-			<Route path="/" element={<Home sheetsData={sheetsData} />} />
 			<Route
-				path="newSheet/"
-				element={<NewSheetForm sheetsData={sheetsData} />}
+				path="/"
+				element={
+					<Home
+						sheetsData={sheetsData}
+						setSheetsData={setSheetsData}
+					/>
+				}
 			/>
+			<Route path="newSheet/" element={<NewSheetForm />} />
 			<Route
 				path="newSheet/stations"
 				element={<StationsForm setSheetsData={setSheetsData} />}
 			/>
 			<Route
-				path="/sheet/:title"
+				path="/sheet/:id"
 				element={
 					<SurveySheet
 						sheetsData={sheetsData}

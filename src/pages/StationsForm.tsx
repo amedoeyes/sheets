@@ -5,6 +5,7 @@ import FormButton from "../components/FormButton";
 import FormInput from "../components/FormInput";
 import HeaderText from "../components/HeaderText";
 import useFormReducer from "../hooks/useFormReducer";
+import shortUUID from "short-uuid";
 
 type LocationState = {
 	title: string;
@@ -73,9 +74,13 @@ const StationsForm = ({ setSheetsData }: StationsFormProps) => {
 			}))
 		);
 
+		const id = shortUUID.generate();
+		console.log(id);
+
 		setSheetsData((prev) => [
 			...prev,
 			{
+				id: id,
 				title: title,
 				creationDate: new Date(),
 				stations: stations,
@@ -84,7 +89,7 @@ const StationsForm = ({ setSheetsData }: StationsFormProps) => {
 			},
 		]);
 
-		navigate(`/sheet/${title}`, { replace: true });
+		navigate(`/sheet/${id}`, { replace: true });
 	};
 
 	return (
