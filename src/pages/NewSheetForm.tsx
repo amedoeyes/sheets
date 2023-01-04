@@ -69,6 +69,7 @@ const NewSheetForm = () => {
 
 		return setForm(e.target.id, { value: e.target.value, message: "" });
 	};
+	console.log(form);
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();

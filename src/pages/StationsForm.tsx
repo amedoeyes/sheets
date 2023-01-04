@@ -12,7 +12,7 @@ type LocationState = {
 	stations: string[];
 	points: number[];
 	sectionWidth: number;
-	inclination: number;
+	slope: number;
 	level: number;
 };
 
@@ -26,7 +26,7 @@ const StationsForm = ({ setSheetsData }: StationsFormProps) => {
 
 	if (!location.state) return <Navigate to="/" replace />;
 
-	const { title, stations, points, inclination, level }: LocationState =
+	const { title, stations, points, slope, level }: LocationState =
 		location.state;
 
 	const stationsStates = stations.reduce(
@@ -65,17 +65,12 @@ const StationsForm = ({ setSheetsData }: StationsFormProps) => {
 		const sheet: { value: number }[][] = stations.map((station) =>
 			points.map((point) => ({
 				value: Number(
-					(
-						level -
-						value[station] +
-						(point / 100) * inclination
-					).toFixed(2)
+					(level - value[station] + (point / 100) * slope).toFixed(2)
 				),
 			}))
 		);
 
 		const id = shortUUID.generate();
-		console.log(id);
 
 		setSheetsData((prev) => [
 			...prev,
