@@ -79,6 +79,11 @@ export default function NewSheetForm() {
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (e.target.inputMode === "numeric") {
+			if (e.target.id === "offset")
+				return setForm("offset", {
+					value: Number(-e.target.value),
+					message: "",
+				});
 			return setForm(e.target.id, {
 				value: Number(e.target.value),
 				message: "",
