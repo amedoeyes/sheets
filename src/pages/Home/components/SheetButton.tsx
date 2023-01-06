@@ -6,7 +6,6 @@ type SheetButtonProps = {
 	creationDate: Date;
 	stations: string[];
 	to: string;
-	children?: React.ReactNode;
 };
 
 export default function SheetButton({
@@ -14,7 +13,6 @@ export default function SheetButton({
 	creationDate,
 	stations,
 	to,
-	children,
 }: SheetButtonProps) {
 	const navigate = useNavigate();
 	const handleClick = () => navigate(to);
@@ -23,7 +21,7 @@ export default function SheetButton({
 	return (
 		<button
 			type="button"
-			className="bg-primary w-full p-6 relative flex flex-col justify-center gap-2 text-lg border border-secondary border-opacity-50 hover:border-opacity-100 focus:border-opacity-100 rounded-3xl outline-none overflow-hidden"
+			className="flex flex-col justify-center gap-2 text-lg"
 			onClick={handleClick}
 		>
 			<h2 className="text-2xl">{title}</h2>
@@ -36,7 +34,6 @@ export default function SheetButton({
 				</div>
 			)}
 			{date && <p>{date}</p>}
-			{children}
 		</button>
 	);
 }

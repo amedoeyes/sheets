@@ -19,18 +19,21 @@ export default function Home({ sheetsData, setSheetsData }: HomeProps) {
 			<HeaderText>Sheets</HeaderText>
 			<div className="w-full flex flex-col gap-4">
 				{sheetsData.map(({ id, title, creationDate, stations }) => (
-					<SheetButton
+					<div
 						key={id}
-						title={title}
-						creationDate={creationDate}
-						stations={stations}
-						to={`sheet/${id}`}
+						className="bg-primary w-full p-6 flex justify-center relative border border-secondary border-opacity-50 hover:border-opacity-100 focus:border-opacity-100 rounded-3xl outline-none overflow-hidden"
 					>
+						<SheetButton
+							title={title}
+							creationDate={creationDate}
+							stations={stations}
+							to={`sheet/${id}`}
+						/>
 						<DeleteSheetButton
 							id={id}
 							setSheetsData={setSheetsData}
 						/>
-					</SheetButton>
+					</div>
 				))}
 				<button
 					className="bg-primary w-full p-6 relative flex flex-col justify-center gap-2 text-lg border border-secondary border-opacity-50 hover:border-opacity-100 focus:border-opacity-100 rounded-3xl outline-none"
