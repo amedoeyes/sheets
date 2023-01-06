@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { SheetData } from "../../App";
 import HeaderText from "../../components/HeaderText";
+import DeleteSheetButton from "./components/DeleteSheetButton";
 import SheetButton from "./components/SheetButton";
 
 type HomeProps = {
@@ -8,7 +9,7 @@ type HomeProps = {
 	setSheetsData: React.Dispatch<React.SetStateAction<SheetData[]>>;
 };
 
-const Home = ({ sheetsData, setSheetsData }: HomeProps) => {
+export default function Home({ sheetsData, setSheetsData }: HomeProps) {
 	const navigate = useNavigate();
 
 	const handleClick = () => navigate("/newSheet");
@@ -20,13 +21,16 @@ const Home = ({ sheetsData, setSheetsData }: HomeProps) => {
 				{sheetsData.map(({ id, title, creationDate, stations }) => (
 					<SheetButton
 						key={id}
-						id={id}
 						title={title}
 						creationDate={creationDate}
 						stations={stations}
-						setSheetsData={setSheetsData}
 						to={`sheet/${id}`}
-					/>
+					>
+						<DeleteSheetButton
+							id={id}
+							setSheetsData={setSheetsData}
+						/>
+					</SheetButton>
 				))}
 				<button
 					className="bg-primary w-full p-6 relative flex flex-col justify-center gap-2 text-lg border border-secondary border-opacity-50 hover:border-opacity-100 focus:border-opacity-100 rounded-3xl outline-none"
@@ -37,6 +41,4 @@ const Home = ({ sheetsData, setSheetsData }: HomeProps) => {
 			</div>
 		</div>
 	);
-};
-
-export default Home;
+}

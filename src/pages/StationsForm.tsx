@@ -6,6 +6,7 @@ import FormInput from "../components/FormInput";
 import HeaderText from "../components/HeaderText";
 import useFormReducer from "../hooks/useFormReducer";
 import shortUUID from "short-uuid";
+import { z } from "zod";
 
 type LocationState = {
 	title: string;
@@ -20,7 +21,7 @@ type StationsFormProps = {
 	setSheetsData: React.Dispatch<React.SetStateAction<SheetData[]>>;
 };
 
-const StationsForm = ({ setSheetsData }: StationsFormProps) => {
+export default function StationsForm({ setSheetsData }: StationsFormProps) {
 	const navigate = useNavigate();
 	const location = useLocation();
 
@@ -29,46 +30,88 @@ const StationsForm = ({ setSheetsData }: StationsFormProps) => {
 	const { title, stations, points, slope, level }: LocationState =
 		location.state;
 
-	const stationsStates = stations.reduce(
-		(acc: { [key: string]: number }, station) => ({ ...acc, [station]: 0 }),
+	const formValues = z.object(
+		stations.reduce(
+			(
+				acc: {
+					[key: string]: z.ZodObject<
+						{
+							value: z.ZodNumber;
+						},
+						"strip",
+						z.ZodTypeAny,
+						{
+							value: number;
+						},
+						{
+							value: number;
+						}
+					>;
+				},
+				station: string
+			) => ({
+				...acc,
+				[station]: z.object({
+					value: z
+						.number({ invalid_type_error: "Must be a number" })
+						.min(1, { message: "Required" }),
+				}),
+			}),
+			{}
+		)
+	);
+
+	const FormInitialState = stations.reduce(
+		(
+			acc: { [key: string]: { value: number; message: string } },
+			station: string
+		) => ({ ...acc, [station]: { value: 0, message: "" } }),
 		{}
 	);
 
-	const stationsErrors = stations.reduce(
-		(acc: { [key: string]: string }, station) => ({
-			...acc,
-			[station]: "",
-		}),
-		{}
-	);
-
-	const [value, setValue] = useFormReducer(stationsStates);
-	const [errors, setErrors] = useFormReducer(stationsErrors);
+	const [form, setForm] = useFormReducer(FormInitialState);
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setErrors(e.target.id, "");
-
-		setValue(e.target.id, Number(e.target.value));
-	};
-
-	const handleInvalid = (e: React.InvalidEvent<HTMLInputElement>) => {
-		let error = "";
-
-		if (e.target.validity.valueMissing) error = "Required";
-
-		setErrors(e.target.id, error);
+		setForm(e.target.id, {
+			value: Number(e.target.value),
+			message: "",
+		});
 	};
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
 
-		const sheet: { value: number }[][] = stations.map((station) =>
-			points.map((point) => ({
-				value: Number(
-					(level - value[station] + (point / 100) * slope).toFixed(2)
-				),
-			}))
-		);
+		const validate = formValues.safeParse(form);
+
+		if (!validate.success)
+			return validate.error.issues.forEach((issue) => {
+				const key = issue.path[0].toString();
+				const value = form[key as keyof typeof form];
+
+				setForm(key, {
+					...value,
+					message: value.message || issue.message,
+				});
+			});
+
+		const sheet: { value: number }[][] | any = stations
+			.map((station) =>
+				points.map((point) => ({
+					value: Number(
+						(
+							level -
+							form[station].value +
+							(point / 100) * slope
+						).toFixed(2)
+					),
+				}))
+			)
+			.flatMap((row) => [
+				row,
+				points.map((_) => ({
+					value: null,
+				})),
+			]);
 
 		const id = shortUUID.generate();
 
@@ -94,20 +137,15 @@ const StationsForm = ({ setSheetsData }: StationsFormProps) => {
 				{stations.map((station) => (
 					<FormInput
 						key={station}
-						name={station}
-						pattern="[0-9.]+"
-						inputMode="numeric"
-						required
 						id={station}
+						label={station}
+						inputMode="numeric"
 						onChange={handleChange}
-						message={errors[station]}
-						onInvalid={handleInvalid}
+						message={form[station].message}
 					/>
 				))}
 				<FormButton className="col-span-2">Create Sheet</FormButton>
 			</form>
 		</div>
 	);
-};
-
-export default StationsForm;
+}

@@ -8,13 +8,16 @@ type SurveySheetProps = {
 	setSheetsData: React.Dispatch<React.SetStateAction<SheetData[]>>;
 };
 
-const SurveySheet = ({ sheetsData, setSheetsData }: SurveySheetProps) => {
+export default function SurveySheet({
+	sheetsData,
+	setSheetsData,
+}: SurveySheetProps) {
 	const params = useParams();
 
 	if (!sheetsData.some((sheetData) => sheetData.id === params.id))
 		return <Navigate to="/" replace />;
 
-	const { title, stations, points, sheet } = sheetsData.find(
+	let { title, stations, points, sheet } = sheetsData.find(
 		(sheet) => sheet.id === params.id
 	) as SheetData;
 
@@ -24,6 +27,8 @@ const SurveySheet = ({ sheetsData, setSheetsData }: SurveySheetProps) => {
 		);
 		setSheetsData(newSheets);
 	};
+
+	stations = stations.flatMap((station) => [station, "Diff"]);
 
 	return (
 		<div>
@@ -37,6 +42,4 @@ const SurveySheet = ({ sheetsData, setSheetsData }: SurveySheetProps) => {
 			/>
 		</div>
 	);
-};
-
-export default SurveySheet;
+}

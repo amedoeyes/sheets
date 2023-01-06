@@ -1,44 +1,24 @@
 import { useNavigate } from "react-router-dom";
 import useDate from "../../../hooks/useDate";
-import { SheetData } from "../../../App";
 
 type SheetButtonProps = {
-	id: string;
 	title: string;
-	creationDate?: Date;
-	stations?: string[];
-	setSheetsData: React.Dispatch<React.SetStateAction<SheetData[]>>;
+	creationDate: Date;
+	stations: string[];
 	to: string;
+	children?: React.ReactNode;
 };
 
-type DeleteSheetButtonProps = {
-	id: string;
-	setSheetsData: React.Dispatch<React.SetStateAction<SheetData[]>>;
-};
-
-const DeleteSheetButton = ({ id, setSheetsData }: DeleteSheetButtonProps) => {
-	const handleClick = () =>
-		setSheetsData((prev) =>
-			prev.filter((sheetData) => sheetData.id !== id)
-		);
-	return (
-		<button className="h-full w-16 left-0 absolute" onClick={handleClick}>
-			X
-		</button>
-	);
-};
-
-const SheetButton = ({
-	id,
+export default function SheetButton({
 	title,
 	creationDate,
 	stations,
-	setSheetsData,
 	to,
-}: SheetButtonProps) => {
+	children,
+}: SheetButtonProps) {
 	const navigate = useNavigate();
 	const handleClick = () => navigate(to);
-	const date = creationDate ? useDate(creationDate) : null;
+	const date = useDate(creationDate);
 
 	return (
 		<button
@@ -56,9 +36,7 @@ const SheetButton = ({
 				</div>
 			)}
 			{date && <p>{date}</p>}
-			<DeleteSheetButton id={id} setSheetsData={setSheetsData} />
+			{children}
 		</button>
 	);
-};
-
-export default SheetButton;
+}

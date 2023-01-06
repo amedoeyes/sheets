@@ -14,7 +14,7 @@ export type SheetData = {
 	sheet: { value: number }[][];
 };
 
-const App = () => {
+export default function App() {
 	const [sheetsData, setSheetsData] = useLocalStorage<SheetData[]>(
 		"sheetsData",
 		[]
@@ -48,6 +48,4 @@ const App = () => {
 			<Route path="*" element={<Navigate to="/" replace />} />
 		</Routes>
 	);
-};
-
-export default App;
+}

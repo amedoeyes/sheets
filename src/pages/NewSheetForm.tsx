@@ -5,45 +5,62 @@ import HeaderText from "../components/HeaderText";
 import useFormReducer from "../hooks/useFormReducer";
 import { z } from "zod";
 
-const NewSheetForm = () => {
+export default function NewSheetForm() {
 	const navigate = useNavigate();
-	const FormValues = z.object({
+	const formValues = z.object({
 		title: z.object({ value: z.string().min(1, { message: "Required" }) }),
 		startStation: z.object({
-			value: z.number().refine((value) => value % 20 === 0, {
-				message: "Must be dividable by 20",
-			}),
+			value: z
+				.number({ invalid_type_error: "Must be a number" })
+				.min(1, { message: "Required" })
+				.refine((value) => value % 20 === 0, {
+					message: "Must be dividable by 20",
+				}),
 		}),
 		endStation: z.object({
 			value: z
-				.number()
+				.number({ invalid_type_error: "Must be a number" })
 				.min(1, { message: "Required" })
 				.refine((value) => value % 20 === 0, {
 					message: "Must be dividable by 20",
 				}),
 		}),
 		pointsWidth: z.object({
-			value: z.number().min(1, { message: "Required" }),
+			value: z
+				.number({ invalid_type_error: "Must be a number" })
+				.min(1, { message: "Required" }),
 		}),
 		sectionWidth: z.object({
-			value: z.number().min(1, { message: "Required" }),
+			value: z
+				.number({ invalid_type_error: "Must be a number" })
+				.min(1, { message: "Required" }),
 		}),
 		offset: z.object({
-			value: z.number().optional(),
+			value: z
+				.number({ invalid_type_error: "Must be a number" })
+				.optional(),
 		}),
 
 		slope: z.object({
-			value: z.number().optional(),
+			value: z
+				.number({ invalid_type_error: "Must be a number" })
+				.optional(),
 		}),
 
 		backsight: z.object({
-			value: z.number().min(1, { message: "Required" }),
+			value: z
+				.number({ invalid_type_error: "Must be a number" })
+				.min(1, { message: "Required" }),
 		}),
 		benchmark: z.object({
-			value: z.number().min(1, { message: "Required" }),
+			value: z
+				.number({ invalid_type_error: "Must be a number" })
+				.min(1, { message: "Required" }),
 		}),
 		thickness: z.object({
-			value: z.number().optional(),
+			value: z
+				.number({ invalid_type_error: "Must be a number" })
+				.optional(),
 		}),
 	});
 
@@ -61,28 +78,31 @@ const NewSheetForm = () => {
 	});
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		if (e.target.inputMode === "numeric")
+		if (e.target.inputMode === "numeric") {
 			return setForm(e.target.id, {
 				value: Number(e.target.value),
 				message: "",
 			});
+		}
 
 		return setForm(e.target.id, { value: e.target.value, message: "" });
 	};
-	console.log(form);
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
 
-		const validate = FormValues.safeParse(form);
+		const validate = formValues.safeParse(form);
 
 		if (!validate.success)
-			return validate.error.issues.forEach((issue) =>
-				setForm(issue.path[0].toString(), {
-					...form[issue.path[0].toString() as keyof typeof form],
-					message: issue.message,
-				})
-			);
+			return validate.error.issues.forEach((issue) => {
+				const key = issue.path[0].toString();
+				const value = form[key as keyof typeof form];
+
+				setForm(key, {
+					...value,
+					message: value.message || issue.message,
+				});
+			});
 
 		const stations = Array.from(
 			Array((form.endStation.value - form.startStation.value) / 20 + 1),
@@ -130,87 +150,78 @@ const NewSheetForm = () => {
 				onSubmit={handleSubmit}
 			>
 				<FormInput
-					name="Title"
 					id="title"
+					label="Title"
 					onChange={handleChange}
 					message={form.title.message}
 				/>
 				<div className="flex gap-4">
 					<FormInput
-						name="Start Stations"
-						pattern="[0-9.-]+"
-						inputMode="numeric"
 						id="startStation"
+						label="Start Stations"
+						inputMode="numeric"
 						onChange={handleChange}
 						message={form.startStation.message}
 					/>
 					<FormInput
-						name="End Stations"
-						pattern="[0-9.-]+"
-						inputMode="numeric"
 						id="endStation"
+						label="End Stations"
+						inputMode="numeric"
 						onChange={handleChange}
 						message={form.endStation.message}
 					/>
 				</div>
 				<div className="flex gap-4">
 					<FormInput
-						name="Points Width"
-						pattern="[0-9.-]+"
-						inputMode="numeric"
 						id="pointsWidth"
+						label="Points Width"
+						inputMode="numeric"
 						onChange={handleChange}
 						message={form.pointsWidth.message}
 					/>
 					<FormInput
-						name="Section Width"
-						pattern="[0-9.-]+"
-						inputMode="numeric"
 						id="sectionWidth"
+						label="Section Width"
+						inputMode="numeric"
 						onChange={handleChange}
 						message={form.sectionWidth.message}
 					/>
 				</div>
 				<div className="flex gap-4">
 					<FormInput
-						name="Offset"
-						pattern="[0-9.-]+"
-						inputMode="numeric"
 						id="offset"
+						label="Offset"
+						inputMode="numeric"
 						onChange={handleChange}
 						message={form.offset.message}
 					/>
 					<FormInput
-						name="Slope"
-						pattern="[0-9.-]+"
-						inputMode="numeric"
 						id="slope"
+						label="Slope"
+						inputMode="numeric"
 						onChange={handleChange}
 						message={form.slope.message}
 					/>
 				</div>
 				<div className="flex gap-4">
 					<FormInput
-						name="Backsight"
-						pattern="[0-9.-]+"
-						inputMode="numeric"
 						id="backsight"
+						label="Backsight"
+						inputMode="numeric"
 						onChange={handleChange}
 						message={form.backsight.message}
 					/>
 					<FormInput
-						name="Benchmark"
-						pattern="[0-9.-]+"
-						inputMode="numeric"
 						id="benchmark"
+						label="Benchmark"
+						inputMode="numeric"
 						onChange={handleChange}
 						message={form.benchmark.message}
 					/>
 					<FormInput
-						name="Thickness"
-						pattern="[0-9.-]+"
-						inputMode="numeric"
 						id="thickness"
+						label="Thickness"
+						inputMode="numeric"
 						onChange={handleChange}
 						message={form.thickness.message}
 					/>
@@ -219,6 +230,4 @@ const NewSheetForm = () => {
 			</form>
 		</div>
 	);
-};
-
-export default NewSheetForm;
+}
