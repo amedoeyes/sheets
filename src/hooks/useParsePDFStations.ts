@@ -1,8 +1,8 @@
 import * as pdfjs from "pdfjs-dist";
+import pdfjsWorker from "pdfjs-dist/build/pdf.worker?url";
 import { TextItem } from "pdfjs-dist/types/src/display/api";
 
-pdfjs.GlobalWorkerOptions.workerSrc =
-	"../../../node_modules/pdfjs-dist/build/pdf.worker.js";
+pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
 export default async function useParsePDFStations(
 	file: ArrayBuffer,
