@@ -1,9 +1,9 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home/Home";
-import NewSheetForm from "./pages/NewSheetForm";
-import StationsForm from "./pages/StationsForm";
 import SurveySheet from "./pages/SurveySheet";
-import { useLocalStorage } from "./hooks/useLocaleStorage";
+import useLocalStorage from "./hooks/useLocaleStorage";
+import NewSheet from "./pages/NewSheet/NewSheet";
+import useTheme from "./hooks/useTheme";
 
 export type SheetData = {
 	id: string;
@@ -11,10 +11,11 @@ export type SheetData = {
 	creationDate: Date;
 	stations: string[];
 	points: number[];
-	sheet: { value: number }[][];
+	sheet: { value: number | null }[][];
 };
 
 export default function App() {
+	useTheme();
 	const [sheetsData, setSheetsData] = useLocalStorage<SheetData[]>(
 		"sheetsData",
 		[]
@@ -23,7 +24,7 @@ export default function App() {
 	return (
 		<Routes>
 			<Route
-				path="/"
+				index
 				element={
 					<Home
 						sheetsData={sheetsData}
@@ -31,13 +32,12 @@ export default function App() {
 					/>
 				}
 			/>
-			<Route path="newSheet/" element={<NewSheetForm />} />
 			<Route
-				path="newSheet/stations"
-				element={<StationsForm setSheetsData={setSheetsData} />}
+				path="newSheet/*"
+				element={<NewSheet setSheetsData={setSheetsData} />}
 			/>
 			<Route
-				path="/sheet/:id"
+				path="sheet/:id"
 				element={
 					<SurveySheet
 						sheetsData={sheetsData}
@@ -45,7 +45,7 @@ export default function App() {
 					/>
 				}
 			/>
-			<Route path="*" element={<Navigate to="/" replace />} />
+			{/* <Route path="*" element={<Navigate to="/" replace />} /> */}
 		</Routes>
 	);
 }

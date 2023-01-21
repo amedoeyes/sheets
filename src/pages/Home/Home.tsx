@@ -1,8 +1,9 @@
-import { useNavigate } from "react-router-dom";
 import { SheetData } from "../../App";
-import HeaderText from "../../components/HeaderText";
 import DeleteSheetButton from "./components/DeleteSheetButton";
+import EditSheetButton from "./components/EditSheetButton";
+import Header from "./components/Header";
 import SheetButton from "./components/SheetButton";
+import SheetCard from "./components/SheetCard";
 
 type HomeProps = {
 	sheetsData: SheetData[];
@@ -10,38 +11,21 @@ type HomeProps = {
 };
 
 export default function Home({ sheetsData, setSheetsData }: HomeProps) {
-	const navigate = useNavigate();
-
-	const handleClick = () => navigate("/newSheet");
-
 	return (
-		<div className="max-w-lg px-10 pb-10 flex flex-col items-center m-auto">
-			<HeaderText>Sheets</HeaderText>
-			<div className="w-full flex flex-col gap-4">
-				{sheetsData.map(({ id, title, creationDate, stations }) => (
-					<div
-						key={id}
-						className="bg-primary w-full p-6 flex justify-center relative border border-secondary border-opacity-50 hover:border-opacity-100 focus:border-opacity-100 rounded-3xl outline-none overflow-hidden"
-					>
-						<SheetButton
-							title={title}
-							creationDate={creationDate}
-							stations={stations}
-							to={`sheet/${id}`}
-						/>
-						<DeleteSheetButton
-							id={id}
-							setSheetsData={setSheetsData}
-						/>
-					</div>
+		<>
+			<Header />
+			<div className="max-w-lg p-10 m-auto flex flex-col items-center gap-4">
+				{sheetsData.map((sheet) => (
+					<SheetCard
+						key={sheet.id}
+						id={sheet.id}
+						title={sheet.title}
+						stations={sheet.stations}
+						creationDate={sheet.creationDate}
+						setSheetsData={setSheetsData}
+					/>
 				))}
-				<button
-					className="bg-primary w-full p-6 relative flex flex-col justify-center gap-2 text-lg border border-secondary border-opacity-50 hover:border-opacity-100 focus:border-opacity-100 rounded-3xl outline-none"
-					onClick={handleClick}
-				>
-					New Sheet
-				</button>
 			</div>
-		</div>
+		</>
 	);
 }

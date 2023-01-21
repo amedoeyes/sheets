@@ -1,17 +1,35 @@
 import { useReducer } from "react";
 
-function useFormReducer<T>(initialStates: T) {
+export type Value = string | File;
+
+export default function useFormReducer<T>(
+	initialStates: Record<keyof T, { value: string; message: string }> & Object
+) {
 	type Action = {
 		type: string;
-		payload: { key: string; value: T[keyof T] };
+		payload: {
+			key: string;
+			value: Value;
+		};
 	};
 
-	const reducer = (state: T, action: Action) => {
+	const reducer = (state: typeof initialStates, action: Action) => {
 		switch (action.type) {
-			case "update":
+			case "UPDATE_VALUE":
 				return {
 					...state,
-					[action.payload.key]: action.payload.value,
+					[action.payload.key]: {
+						value: action.payload.value,
+						message: "",
+					},
+				};
+			case "UPDATE_MESSAGE":
+				return {
+					...state,
+					[action.payload.key]: {
+						...state[action.payload.key as keyof T],
+						message: action.payload.value,
+					},
 				};
 			default:
 				return state;
@@ -20,16 +38,23 @@ function useFormReducer<T>(initialStates: T) {
 
 	const [state, dispatch] = useReducer(reducer, initialStates);
 
-	const setState = (key: string, value: T[keyof T]) =>
+	const setValueOf = (key: string, value: Value) =>
 		dispatch({
-			type: "update",
+			type: "UPDATE_VALUE",
 			payload: {
 				key: key,
 				value: value,
 			},
 		});
 
-	return [state, setState] as const;
-}
+	const setMessageOf = (key: string, message: string) =>
+		dispatch({
+			type: "UPDATE_MESSAGE",
+			payload: {
+				key: key,
+				value: message,
+			},
+		});
 
-export default useFormReducer;
+	return { state, setValueOf, setMessageOf } as const;
+}

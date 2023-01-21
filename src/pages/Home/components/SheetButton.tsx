@@ -26,14 +26,12 @@ export default function SheetButton({
 		>
 			<h2 className="text-2xl">{title}</h2>
 
-			{stations && (
-				<div className="flex justify-center">
-					<p>
-						{stations[0]} - {stations[stations.length - 1]}
-					</p>
-				</div>
-			)}
-			{date && <p>{date}</p>}
+			<div className="flex justify-center">
+				<p>
+					{stations[0]} - {stations[stations.length - 1]}
+				</p>
+			</div>
+			<p>{date}</p>
 		</button>
 	);
 }
