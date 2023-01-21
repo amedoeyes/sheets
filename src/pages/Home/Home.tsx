@@ -1,8 +1,12 @@
+import {
+	FaBoxOpen,
+	FaDotCircle,
+	FaFile,
+	FaFrown,
+	FaPlus,
+} from "react-icons/fa";
 import { SheetData } from "../../App";
-import DeleteSheetButton from "./components/DeleteSheetButton";
-import EditSheetButton from "./components/EditSheetButton";
 import Header from "./components/Header";
-import SheetButton from "./components/SheetButton";
 import SheetCard from "./components/SheetCard";
 
 type HomeProps = {
@@ -15,6 +19,12 @@ export default function Home({ sheetsData, setSheetsData }: HomeProps) {
 		<>
 			<Header />
 			<div className="max-w-lg p-10 m-auto flex flex-col items-center gap-4">
+				{sheetsData.length === 0 && (
+					<div className="pt-20 flex flex-col items-center gap-2 absolute top-1/2 -translate-y-1/2 opacity-25">
+						<FaFile size={75} />
+						<p className="text-4xl font-bold">Empty</p>
+					</div>
+				)}
 				{sheetsData.map((sheet) => (
 					<SheetCard
 						key={sheet.id}

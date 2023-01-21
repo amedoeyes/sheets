@@ -21,11 +21,10 @@ export default function SheetButton({
 	return (
 		<button
 			type="button"
-			className="flex flex-col justify-center gap-2 text-lg"
+			className="w-full py-6 flex flex-col justify-center gap-2 text-lg"
 			onClick={handleClick}
 		>
 			<h2 className="text-2xl">{title}</h2>
-
 			<div className="flex justify-center">
 				<p>
 					{stations[0]} - {stations[stations.length - 1]}
