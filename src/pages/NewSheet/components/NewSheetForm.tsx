@@ -37,7 +37,7 @@ export default function NewSheetForm({ form }: NewSheetFormProps) {
 					}
 				)
 				.refine(
-					(value) => value < Number(form.state.endStation.value),
+					(value) => value <= Number(form.state.endStation.value),
 					{
 						message:
 							"Start station can't be higher than end station",

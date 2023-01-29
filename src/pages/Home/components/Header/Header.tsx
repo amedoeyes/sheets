@@ -1,5 +1,6 @@
-import HeaderText from "../../../components/HeaderText";
+import HeaderText from "../../../../components/HeaderText";
 import NewSheetButton from "./NewSheetButton";
+import InstallButton from "./InstallButton";
 import ToggleThemeButton from "./ToggleThemeButton";
 
 export default function Header() {
@@ -9,8 +10,9 @@ export default function Header() {
 				<HeaderText className="text-2xl font-bold">Sheets</HeaderText>
 			</div>
 			<div className="flex gap-2 mr-4">
-				<NewSheetButton />
+				<InstallButton />
 				<ToggleThemeButton />
+				<NewSheetButton />
 			</div>
 		</div>
 	);

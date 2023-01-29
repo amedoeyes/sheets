@@ -6,7 +6,7 @@ import {
 	FaPlus,
 } from "react-icons/fa";
 import { SheetData } from "../../App";
-import Header from "./components/Header";
+import Header from "./components/Header/Header";
 import SheetCard from "./components/SheetCard";
 
 type HomeProps = {

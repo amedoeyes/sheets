@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { SheetData } from "../../App";
 import useFormReducer, { Value } from "../../hooks/useFormReducer";
 import NewSheetForm from "./components/NewSheetForm";
@@ -66,6 +66,7 @@ export default function NewSheet({ setSheetsData }: NewSheetProps) {
 				path="stations"
 				element={<Stations setSheetsData={setSheetsData} />}
 			/>
+			<Route path="*" element={<Navigate to="/" replace />} />
 		</Routes>
 	);
 }

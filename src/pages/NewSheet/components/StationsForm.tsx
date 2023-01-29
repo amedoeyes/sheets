@@ -86,8 +86,8 @@ export default function StationsForm({
 			},
 		]);
 
-		window.history.replaceState({}, "./");
-		navigate(`/sheet/${id}`);
+		window.history.replaceState({}, "");
+		navigate(`/sheet/${id}`, { replace: true });
 	};
 
 	return (
