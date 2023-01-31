@@ -6,7 +6,7 @@ import FormInput from "./FormInput";
 import HeaderText from "../../../../../components/HeaderText";
 import shortUUID from "short-uuid";
 import useValidateForm from "../../../../../hooks/useValidateForm";
-import { LocationState } from "../Stations";
+import { LocationState } from "../pages/Stations";
 import { z } from "zod";
 import { Value } from "../../../../../hooks/useFormReducer";
 
