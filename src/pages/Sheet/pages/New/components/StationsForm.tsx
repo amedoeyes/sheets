@@ -1,14 +1,27 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { SheetData } from "../../../App";
+import { SheetData } from "../../../../../App";
 import FormButton from "./FormButton";
 import FormInput from "./FormInput";
-import HeaderText from "../../../components/HeaderText";
+import HeaderText from "../../../../../components/HeaderText";
 import shortUUID from "short-uuid";
-import useValidateForm from "../../../hooks/useValidateForm";
+import useValidateForm from "../../../../../hooks/useValidateForm";
 import { LocationState } from "../Stations";
 import { z } from "zod";
-import { StationsFormReducer } from "../NewSheet";
+import { Value } from "../../../../../hooks/useFormReducer";
+
+export type StationsFormReducer = {
+	state: Record<
+		string,
+		{
+			value: string;
+			message: string;
+		}
+	> &
+		Object;
+	setValueOf: (key: string, value: Value) => void;
+	setMessageOf: (key: string, message: string) => void;
+};
 
 type StationsFormProps = {
 	form: StationsFormReducer;
@@ -61,7 +74,7 @@ export default function StationsForm({
 							locationState.level -
 							validate.data[station].value +
 							(point / 100) * locationState.slope
-						).toFixed(2)
+						).toFixed(3)
 					),
 				}))
 			)
@@ -86,8 +99,10 @@ export default function StationsForm({
 			},
 		]);
 
-		window.history.replaceState({}, "");
-		navigate(`/sheet/${id}`, { replace: true });
+		navigate(-2);
+		setTimeout(() => {
+			navigate(`/sheet/${id}`);
+		}, 100);
 	};
 
 	return (

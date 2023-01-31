@@ -1,8 +1,8 @@
 import { Navigate, useParams } from "react-router-dom";
 import { Spreadsheet } from "react-spreadsheet";
-import { SheetData } from "../App";
-import HeaderText from "../components/HeaderText";
-import useTheme from "../hooks/useTheme";
+import { SheetData } from "../../../App";
+import HeaderText from "../../../components/HeaderText";
+import useTheme from "../../../hooks/useTheme";
 
 type SurveySheetProps = {
 	sheetsData: SheetData[];

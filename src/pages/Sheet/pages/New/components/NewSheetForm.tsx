@@ -1,11 +1,33 @@
 import { useNavigate } from "react-router-dom";
 import FormButton from "./FormButton";
 import FormInput from "./FormInput";
-import HeaderText from "../../../components/HeaderText";
-import useValidateForm from "../../../hooks/useValidateForm";
+import useValidateForm from "../../../../../hooks/useValidateForm";
 import FormSelect from "./FormSelect";
 import { z } from "zod";
-import { NewSheetFormReducer } from "../NewSheet";
+import { Value } from "../../../../../hooks/useFormReducer";
+
+export type NewSheetFormReducer = {
+	state: Record<
+		| "title"
+		| "stationsDivision"
+		| "startStation"
+		| "endStation"
+		| "pointsWidth"
+		| "sectionWidth"
+		| "offset"
+		| "slope"
+		| "backsight"
+		| "benchmark"
+		| "thickness",
+		{
+			value: string;
+			message: string;
+		}
+	> &
+		Object;
+	setValueOf: (key: string, value: Value) => void;
+	setMessageOf: (key: string, message: string) => void;
+};
 
 type NewSheetFormProps = {
 	form: NewSheetFormReducer;
@@ -197,111 +219,108 @@ export default function NewSheetForm({ form }: NewSheetFormProps) {
 	};
 
 	return (
-		<div className="max-w-lg min-h-screen m-auto px-4 pb-4 flex flex-col justify-center items-center">
-			<HeaderText>New Sheet</HeaderText>
-			<form
-				className="flex flex-col justify-center gap-4"
-				onSubmit={handleSubmit}
-			>
-				<FormInput
-					id="title"
-					label="Title"
-					value={form.state.title.value}
+		<form
+			className="flex flex-col justify-center gap-4"
+			onSubmit={handleSubmit}
+		>
+			<FormInput
+				id="title"
+				label="Title"
+				value={form.state.title.value}
+				onChange={handleChange}
+				message={form.state.title.message}
+			/>
+			<div className="flex gap-4">
+				<FormSelect
+					id="stationsDivision"
+					label="Division"
+					value={form.state.stationsDivision.value}
 					onChange={handleChange}
-					message={form.state.title.message}
+					message={form.state.stationsDivision.message}
+				>
+					<option value="10">10</option>
+					<option value="20">20</option>
+				</FormSelect>
+				<FormInput
+					id="startStation"
+					label="Start Station"
+					inputMode="numeric"
+					value={form.state.startStation.value}
+					onChange={handleChange}
+					message={form.state.startStation.message}
 				/>
-				<div className="flex gap-4">
-					<FormSelect
-						id="stationsDivision"
-						label="Division"
-						value={form.state.stationsDivision.value}
-						onChange={handleChange}
-						message={form.state.stationsDivision.message}
-					>
-						<option value="10">10</option>
-						<option value="20">20</option>
-					</FormSelect>
-					<FormInput
-						id="startStation"
-						label="Start Station"
-						inputMode="numeric"
-						value={form.state.startStation.value}
-						onChange={handleChange}
-						message={form.state.startStation.message}
-					/>
-					<FormInput
-						id="endStation"
-						label="End Station"
-						inputMode="numeric"
-						value={form.state.endStation.value}
-						onChange={handleChange}
-						message={form.state.endStation.message}
-					/>
-				</div>
-				<div className="flex gap-4">
-					<FormInput
-						id="pointsWidth"
-						label="Points Width"
-						inputMode="numeric"
-						value={form.state.pointsWidth.value}
-						onChange={handleChange}
-						message={form.state.pointsWidth.message}
-					/>
-					<FormInput
-						id="sectionWidth"
-						label="Section Width"
-						inputMode="numeric"
-						value={form.state.sectionWidth.value}
-						onChange={handleChange}
-						message={form.state.sectionWidth.message}
-					/>
-				</div>
-				<div className="flex gap-4">
-					<FormInput
-						id="offset"
-						label="Offset"
-						inputMode="numeric"
-						value={form.state.offset.value}
-						onChange={handleChange}
-						message={form.state.offset.message}
-					/>
-					<FormInput
-						id="slope"
-						label="Slope"
-						inputMode="numeric"
-						value={form.state.slope.value}
-						onChange={handleChange}
-						message={form.state.slope.message}
-					/>
-				</div>
-				<div className="flex gap-4">
-					<FormInput
-						id="backsight"
-						label="Backsight"
-						inputMode="numeric"
-						value={form.state.backsight.value}
-						onChange={handleChange}
-						message={form.state.backsight.message}
-					/>
-					<FormInput
-						id="benchmark"
-						label="Benchmark"
-						inputMode="numeric"
-						value={form.state.benchmark.value}
-						onChange={handleChange}
-						message={form.state.benchmark.message}
-					/>
-					<FormInput
-						id="thickness"
-						label="Thickness"
-						inputMode="numeric"
-						value={form.state.thickness.value}
-						onChange={handleChange}
-						message={form.state.thickness.message}
-					/>
-				</div>
-				<FormButton>Next</FormButton>
-			</form>
-		</div>
+				<FormInput
+					id="endStation"
+					label="End Station"
+					inputMode="numeric"
+					value={form.state.endStation.value}
+					onChange={handleChange}
+					message={form.state.endStation.message}
+				/>
+			</div>
+			<div className="flex gap-4">
+				<FormInput
+					id="pointsWidth"
+					label="Points Width"
+					inputMode="numeric"
+					value={form.state.pointsWidth.value}
+					onChange={handleChange}
+					message={form.state.pointsWidth.message}
+				/>
+				<FormInput
+					id="sectionWidth"
+					label="Section Width"
+					inputMode="numeric"
+					value={form.state.sectionWidth.value}
+					onChange={handleChange}
+					message={form.state.sectionWidth.message}
+				/>
+			</div>
+			<div className="flex gap-4">
+				<FormInput
+					id="offset"
+					label="Offset"
+					inputMode="numeric"
+					value={form.state.offset.value}
+					onChange={handleChange}
+					message={form.state.offset.message}
+				/>
+				<FormInput
+					id="slope"
+					label="Slope"
+					inputMode="numeric"
+					value={form.state.slope.value}
+					onChange={handleChange}
+					message={form.state.slope.message}
+				/>
+			</div>
+			<div className="flex gap-4">
+				<FormInput
+					id="backsight"
+					label="Backsight"
+					inputMode="numeric"
+					value={form.state.backsight.value}
+					onChange={handleChange}
+					message={form.state.backsight.message}
+				/>
+				<FormInput
+					id="benchmark"
+					label="Benchmark"
+					inputMode="numeric"
+					value={form.state.benchmark.value}
+					onChange={handleChange}
+					message={form.state.benchmark.message}
+				/>
+				<FormInput
+					id="thickness"
+					label="Thickness"
+					inputMode="numeric"
+					value={form.state.thickness.value}
+					onChange={handleChange}
+					message={form.state.thickness.message}
+				/>
+			</div>
+			<FormButton>Next</FormButton>
+		</form>
 	);
 }

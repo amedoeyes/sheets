@@ -1,9 +1,8 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import Home from "./pages/Home/Home";
-import SurveySheet from "./pages/SurveySheet";
+import Home from "./pages/Home";
 import useLocalStorage from "./hooks/useLocaleStorage";
-import NewSheet from "./pages/NewSheet/NewSheet";
 import useTheme from "./hooks/useTheme";
+import Sheet from "./pages/Sheet";
 
 export type SheetData = {
 	id: string;
@@ -33,13 +32,9 @@ export default function App() {
 				}
 			/>
 			<Route
-				path="newSheet/*"
-				element={<NewSheet setSheetsData={setSheetsData} />}
-			/>
-			<Route
-				path="sheet/:id"
+				path="sheet/*"
 				element={
-					<SurveySheet
+					<Sheet
 						sheetsData={sheetsData}
 						setSheetsData={setSheetsData}
 					/>

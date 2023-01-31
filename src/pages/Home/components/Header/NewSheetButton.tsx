@@ -4,7 +4,7 @@ import HeaderButton from "./HeaderButton";
 
 export default function NewSheetButton() {
 	const navigate = useNavigate();
-	const handleClick = () => navigate("/newSheet");
+	const handleClick = () => navigate("/sheet/new");
 	return (
 		<HeaderButton onClick={handleClick}>
 			<FaPlus />

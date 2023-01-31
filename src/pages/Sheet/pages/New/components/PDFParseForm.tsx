@@ -1,12 +1,12 @@
 import FormButton from "./FormButton";
 import FormInput from "./FormInput";
-import HeaderText from "../../../components/HeaderText";
-import useFormReducer from "../../../hooks/useFormReducer";
-import useParsePDFStations from "../../../hooks/useParsePDFStations";
-import useValidateForm from "../../../hooks/useValidateForm";
+import HeaderText from "../../../../../components/HeaderText";
+import useFormReducer from "../../../../../hooks/useFormReducer";
+import useParsePDFStations from "../../../../../hooks/useParsePDFStations";
+import useValidateForm from "../../../../../hooks/useValidateForm";
 import { z } from "zod";
 import { useState } from "react";
-import { StationsFormReducer } from "../NewSheet";
+import { StationsFormReducer } from "./StationsForm";
 
 type PDFParseFormProps = {
 	stationsForm: StationsFormReducer;
@@ -68,6 +68,11 @@ export default function PDFParseForm({ stationsForm }: PDFParseFormProps) {
 								station,
 								"Does not exist in PDF"
 						  );
+
+				window.scrollBy({
+					top: document.body.scrollHeight,
+					behavior: "smooth",
+				});
 			} catch (err) {
 				console.error(err);
 			}

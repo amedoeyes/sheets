@@ -1,9 +1,9 @@
 import { Navigate, useLocation } from "react-router-dom";
-import { SheetData } from "../../App";
-import HeaderText from "../../components/HeaderText";
-import useFormReducer from "../../hooks/useFormReducer";
-import PDFParseForm from "./components/PDFParseForm";
-import StationsForm from "./components/StationsForm";
+import { SheetData } from "../../../../../App";
+import HeaderText from "../../../../../components/HeaderText";
+import useFormReducer from "../../../../../hooks/useFormReducer";
+import PDFParseForm from "../components/PDFParseForm";
+import StationsForm from "../components/StationsForm";
 
 export type LocationState = {
 	title: string;
