@@ -21,7 +21,7 @@ export default function SheetButton({
 	return (
 		<button
 			type="button"
-			className="w-full py-6 flex flex-col justify-center gap-2 text-lg"
+			className="w-full py-6 flex flex-col justify-center items-center gap-2 text-lg"
 			onClick={handleClick}
 		>
 			<h2 className="text-2xl">{title}</h2>

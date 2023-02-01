@@ -1,13 +1,8 @@
-import {
-	FaBoxOpen,
-	FaDotCircle,
-	FaFile,
-	FaFrown,
-	FaPlus,
-} from "react-icons/fa";
+import { FaFile } from "react-icons/fa";
 import { SheetData } from "../../App";
 import Header from "./components/Header/Header";
 import SheetCard from "./components/SheetCard";
+import { version } from "../../../package.json";
 
 type HomeProps = {
 	sheetsData: SheetData[];
@@ -36,6 +31,9 @@ export default function Home({ sheetsData, setSheetsData }: HomeProps) {
 					/>
 				))}
 			</div>
+			<p className="p-2 opacity-50 absolute bottom-0 right-0">
+				{version}
+			</p>
 		</>
 	);
 }
