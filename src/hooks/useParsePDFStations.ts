@@ -14,31 +14,22 @@ export default async function useParsePDFStations(
 	for (let currentPage = 1; currentPage <= doc.numPages; currentPage++) {
 		const page = await doc.getPage(currentPage);
 		const textContent = await page.getTextContent();
-		let stationY = 0;
 		let station = "";
 		let row = "";
 
 		for (const item of textContent.items as TextItem[]) {
-			if (item.str.includes("+")) stationY = item.transform[5];
-
-			if (item.transform[5] === stationY) {
-				if (item.str.includes("+")) {
-					const splitStation = item.str.split("+");
-
-					station = [
-						splitStation[0],
-						splitStation[1].slice(0, 3),
-					].join("+");
-					row = "";
-				}
-
-				row += item.str;
-
-				if (row.split(" ")[column - 1])
-					stations[station] = row.split(" ")[column - 1];
+			if (item.str.includes("+")) {
+				const splitStation = item.str.split("+");
+				station = [splitStation[0], splitStation[1].slice(0, 3)].join(
+					"+"
+				);
+				row = "";
 			}
+			row += item.str;
+
+			if (station && row.split(" ")[column - 1])
+				stations[station] = row.split(" ")[column - 1];
 		}
 	}
-
 	return stations;
 }
