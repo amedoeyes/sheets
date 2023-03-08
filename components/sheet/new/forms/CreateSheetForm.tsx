@@ -16,7 +16,7 @@ export default function CreateSheetForm() {
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		const cells = createCells(processedData);
+		const cells = createCells(rawData, processedData);
 		const id = uuidv4();
 
 		const newSheet: Sheet = {

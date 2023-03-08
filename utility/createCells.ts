@@ -1,4 +1,7 @@
-export default function createCells(processedData: ProcessedData): Cells {
+export default function createCells(
+	rawData: RawData,
+	processedData: ProcessedData
+): Cells {
 	return processedData.stationsLabels
 		.map((station) =>
 			processedData.points.map((point) => ({
@@ -6,7 +9,7 @@ export default function createCells(processedData: ProcessedData): Cells {
 					(
 						processedData.level -
 						processedData.stations[station] +
-						(point / 100) * processedData.rawData.slope
+						(point / 100) * rawData.slope
 					).toFixed(3)
 				),
 				locked: true,

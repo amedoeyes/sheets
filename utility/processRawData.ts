@@ -5,7 +5,6 @@ export default function processRawData(rawData: RawData): ProcessedData {
 			stations: {},
 			points: [],
 			level: 0,
-			rawData,
 		};
 	}
 
@@ -46,6 +45,5 @@ export default function processRawData(rawData: RawData): ProcessedData {
 		stations,
 		points,
 		level,
-		rawData,
 	};
 }
