@@ -1,21 +1,22 @@
 import { useRouter } from "next/router";
 import parseDate from "@/utility/parseDate";
+import H2 from "@/components/H2";
 
 type SheetButtonProps = {
+	id: string;
 	title: string;
 	creationDate: Date;
-	stations: string[];
-	to: string;
+	stationsLabels: StationsLabels;
 };
 
 export default function SheetButton({
 	title,
 	creationDate,
-	stations,
-	to,
+	stationsLabels,
+	id,
 }: SheetButtonProps) {
 	const router = useRouter();
-	const handleClick = () => router.push(to);
+	const handleClick = () => router.push(id);
 	const date = parseDate(creationDate);
 
 	return (
@@ -24,12 +25,11 @@ export default function SheetButton({
 			className="w-full py-6 flex flex-col justify-center items-center gap-2 text-lg"
 			onClick={handleClick}
 		>
-			<h2 className="text-2xl">{title}</h2>
-			<div className="flex justify-center">
-				<p>
-					{stations[0]} - {stations[stations.length - 1]}
-				</p>
-			</div>
+			<H2 className="my-1 font-normal">{title}</H2>
+			<p>
+				{stationsLabels[0]} -{" "}
+				{stationsLabels[stationsLabels.length - 1]}
+			</p>
 			<p>{date}</p>
 		</button>
 	);

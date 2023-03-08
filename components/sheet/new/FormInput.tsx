@@ -20,7 +20,7 @@ type FormInputProps = {
 
 export default function FormInput({
 	id,
-	className = "",
+	className,
 	value,
 	label,
 	inputMode,
@@ -36,7 +36,7 @@ export default function FormInput({
 			</label>
 			<input
 				id={id}
-				className={`bg-primary w-full h-12 p-2 text-center border border-secondary border-opacity-50 hover:border-opacity-100 focus:border-opacity-100 rounded-3xl outline-none dark:bg-darkPrimary dark:text-darkSecondary dark:border-darkSecondary dark:border-opacity-50 dark:hover:border-opacity-100 dark:focus:border-opacity-100 ${className}`}
+				className={`bg-primary100 w-full h-12 p-2 text-center rounded-3xl outline-none ${className}`}
 				inputMode={inputMode}
 				type={type}
 				accept={accept}

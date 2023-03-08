@@ -1,17 +1,20 @@
 type FormButtonProps = {
 	className?: string;
+	value?: string;
 	disabled?: boolean;
 	children?: React.ReactNode;
 };
 
 export default function FormButton({
-	className = "",
+	className,
+	value,
 	disabled,
 	children,
 }: FormButtonProps) {
 	return (
 		<button
-			className={`bg-primary w-full h-12 mt-4 border border-secondary border-opacity-50 hover:border-opacity-100 focus:border-opacity-100 rounded-3xl outline-none disabled:border-opacity-25 disabled:text-neutral-600 dark:bg-darkPrimary dark:text-darkSecondary dark:border-darkSecondary dark:border-opacity-50 dark:hover:border-opacity-100 dark:focus:border-opacity-100 ${className}`}
+			className={`bg-primary100 disabled:text-primary900 disabled:bg-primary300 w-full h-12 mt-4 rounded-3xl outline-none ${className}`}
+			value={value}
 			disabled={disabled}
 		>
 			{children}

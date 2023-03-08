@@ -13,20 +13,20 @@ export default function Sheet() {
 
 	if (!sheet) return <H1>Loading...</H1>;
 
-	let { title, stations, points, cells } = sheet;
-
 	const onChange = (cells: Cells) => updateSheet(id, { ...sheet, cells });
 
-	stations = stations.flatMap((station) => [station, "Diff"]);
+	const stationsHeader = sheet.processedData.stationsLabels.flatMap(
+		(station) => [station, "Diff"]
+	);
 
 	return (
 		<div>
-			<H1 className="ml-4">{title}</H1>
+			<H1 className="ml-4">{sheet.title}</H1>
 			<Spreadsheet
-				cells={cells}
+				cells={sheet.cells}
 				onChange={onChange}
-				colHeader={stations}
-				rowHeader={points}
+				rowHeader={sheet.processedData.points}
+				colHeader={stationsHeader}
 			/>
 		</div>
 	);

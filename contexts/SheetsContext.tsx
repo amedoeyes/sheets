@@ -1,4 +1,4 @@
-import useLocalStorage from "@/hooks/useLocaleStorage";
+import sheetsDB from "@/utility/sheetsDB";
 import { createContext, useContext, useEffect, useState } from "react";
 
 type SheetsContextType = {
@@ -15,25 +15,36 @@ const SheetsContext = createContext<SheetsContextType>({
 	updateSheet: () => {},
 });
 
-export function SheetsProvider({ children }: { children: React.ReactNode }) {
-	const sheets = useLocalStorage<Sheets>("sheets", []);
+export default function SheetsProvider({
+	children,
+}: {
+	children: React.ReactNode;
+}) {
+	const [sheets, setSheets] = useState<Sheets>([]);
+
+	useEffect(() => {
+		sheetsDB.getAll().then((res) => setSheets(res));
+	}, []);
 
 	const addSheet = (newSheet: Sheet) => {
-		sheets.setValue((prev) => [...prev, newSheet]);
+		setSheets((prev) => [...prev, newSheet]);
+		sheetsDB.add(newSheet);
 	};
 
 	const removeSheet = (id: string) => {
-		sheets.setValue((prev) => prev.filter((sheet) => sheet.id !== id));
+		setSheets((prev) => prev.filter((sheet) => sheet.id !== id));
+		sheetsDB.deleteById(id);
 	};
 
 	const updateSheet = (id: string, newSheet: Sheet) => {
-		sheets.setValue((prev) =>
+		setSheets((prev) =>
 			prev.map((sheet) => (sheet.id === id ? newSheet : sheet))
 		);
+		sheetsDB.update(newSheet);
 	};
 
 	const contextValue: SheetsContextType = {
-		sheets: sheets.value,
+		sheets,
 		addSheet,
 		removeSheet,
 		updateSheet,

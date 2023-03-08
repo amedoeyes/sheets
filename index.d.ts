@@ -12,19 +12,29 @@ declare type RawData = {
 	thickness: number;
 };
 
-declare type Stations = Array<string>;
+declare type Stations = Record<string, number>;
+declare type StationsLabels = Array<string>;
 declare type Points = Array<number>;
 
 declare type ProcessedData = {
 	stations: Stations;
+	stationsLabels: StationsLabels;
 	points: Points;
 	level: number;
-	rawData: RawData | undefined;
 };
 
 declare type Cell = {
 	value: number | string;
 	locked?: boolean;
+	inputMode?:
+		| "search"
+		| "text"
+		| "none"
+		| "tel"
+		| "url"
+		| "email"
+		| "numeric"
+		| "decimal";
 };
 
 declare type Cells = Array<Array<Cell>>;
@@ -33,9 +43,9 @@ declare type Sheet = {
 	id: string;
 	title: string;
 	creationDate: Date;
-	stations: Stations;
-	points: Points;
 	cells: Cells;
+	processedData: ProcessedData;
+	rawData: RawData;
 };
 
 declare type Sheets = Array<Sheet>;

@@ -45,6 +45,7 @@ export default function EditableCell({
 				data-col-index={colIndex}
 				type="text"
 				value={cells[rowIndex][colIndex].value}
+				inputMode={cells[rowIndex][colIndex].inputMode}
 				onChange={handleChange(rowIndex, colIndex)}
 				onKeyDown={handleKeyDown(rowIndex, colIndex)}
 			/>

@@ -1,30 +1,28 @@
 import DeleteSheetButton from "./DeleteSheetButton";
-import EditSheetButton from "./EditSheetButton";
 import SheetButton from "./SheetButton";
 
 type SheetCardProps = {
 	id: string;
 	title: string;
 	creationDate: Date;
-	stations: Stations;
+	stationsLabels: StationsLabels;
 };
 
 export default function SheetCard({
 	id,
 	title,
 	creationDate,
-	stations,
+	stationsLabels,
 }: SheetCardProps) {
 	return (
-		<div className="bg-primary w-full  flex justify-center relative border border-secondary border-opacity-50 hover:border-opacity-100 focus:border-opacity-100 rounded-3xl outline-none overflow-hidden dark:bg-darkPrimary dark:text-darkSecondary dark:border-darkSecondary dark:border-opacity-50 dark:hover:border-opacity-100 dark:focus:border-opacity-100">
+		<div className="bg-primary w-full flex justify-center relative shadow-md rounded-3xl active:shadow-sm">
 			<DeleteSheetButton id={id} />
 			<SheetButton
 				title={title}
 				creationDate={creationDate}
-				stations={stations}
-				to={`sheet/${id}`}
+				stationsLabels={stationsLabels}
+				id={`sheet/${id}`}
 			/>
-			<EditSheetButton id={id} />
 		</div>
 	);
 }

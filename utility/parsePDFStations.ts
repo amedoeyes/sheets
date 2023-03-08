@@ -8,7 +8,7 @@ export default async function parsePDFStations(
 	column: number
 ) {
 	const doc = await pdfjs.getDocument(file).promise;
-	const stations: Record<string, string> & Object = {};
+	const stations: Stations = {};
 
 	for (let currentPage = 1; currentPage <= doc.numPages; currentPage++) {
 		const page = await doc.getPage(currentPage);
@@ -26,8 +26,8 @@ export default async function parsePDFStations(
 			}
 			row += item.str;
 
-			if (station && row.split(" ")[column - 1])
-				stations[station] = row.split(" ")[column - 1];
+			if (station && Number(row.split(" ")[column - 1]))
+				stations[station] = Number(row.split(" ")[column - 1]);
 		}
 	}
 	return stations;

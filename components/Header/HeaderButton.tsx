@@ -6,7 +6,7 @@ type HeaderButtonProps = {
 export default function HeaderButton({ onClick, children }: HeaderButtonProps) {
 	return (
 		<button
-			className="w-10 h-10 flex flex-col justify-center items-center text-lg"
+			className="w-10 h-10 text-xl flex flex-col justify-center items-center"
 			onClick={onClick}
 		>
 			{children}

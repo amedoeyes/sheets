@@ -1,19 +1,15 @@
 import Head from "next/head";
 import packageInfo from "@/package.json";
-import Header from "@/components/home/Header/Header";
 import SheetCard from "@/components/home/SheetCard/SheetCard";
 import { FaFile } from "react-icons/fa";
 import { useSheetsContext } from "@/contexts/SheetsContext";
-import { useEffect } from "react";
-import { useProcessedDataContext } from "@/contexts/ProcessedDataContext";
+import Header from "@/components/Header/Header";
+import H2 from "@/components/H2";
+import InstallButton from "@/components/Header/InstallButton";
+import NewSheetButton from "@/components/Header/NewSheetButton";
 
 export default function Home() {
 	const { sheets } = useSheetsContext();
-	const { deleteProcessedData } = useProcessedDataContext();
-
-	useEffect(() => {
-		deleteProcessedData();
-	}, []);
 
 	return (
 		<>
@@ -31,7 +27,13 @@ export default function Home() {
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 			<main>
-				<Header />
+				<Header className="justify-between">
+					<H2 className="ml-4">SHEETS</H2>
+					<div className="flex gap-2 mr-4">
+						<InstallButton />
+						<NewSheetButton />
+					</div>
+				</Header>
 				<div className="max-w-lg p-10 m-auto flex flex-col items-center gap-4">
 					{sheets.length === 0 && (
 						<div className="pt-20 flex flex-col items-center gap-2 absolute top-1/2 -translate-y-1/2 opacity-25">
@@ -44,7 +46,7 @@ export default function Home() {
 							key={sheet.id}
 							id={sheet.id}
 							title={sheet.title}
-							stations={sheet.stations}
+							stationsLabels={sheet.processedData.stationsLabels}
 							creationDate={sheet.creationDate}
 						/>
 					))}

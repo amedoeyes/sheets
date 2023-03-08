@@ -1,14 +1,15 @@
 export default function processRawData(rawData: RawData): ProcessedData {
 	if (!rawData) {
 		return {
-			stations: [],
+			stationsLabels: [],
+			stations: {},
 			points: [],
 			level: 0,
-			rawData: undefined,
+			rawData,
 		};
 	}
 
-	const stations = Array.from(
+	const stationsLabels = Array.from(
 		Array(
 			(rawData.endStation - rawData.startStation) /
 				rawData.stationsDivision +
@@ -20,6 +21,10 @@ export default function processRawData(rawData: RawData): ProcessedData {
 				.replace(",", "+")
 	).map((station: string) =>
 		station.length < 4 ? "0+" + station.padStart(3, "0") : station
+	);
+
+	const stations: Stations = Object.fromEntries(
+		stationsLabels.map((station) => [station, 0])
 	);
 
 	const points = Array.from(
@@ -37,6 +42,7 @@ export default function processRawData(rawData: RawData): ProcessedData {
 	const level = rawData.backsight + rawData.benchmark + rawData.thickness;
 
 	return {
+		stationsLabels,
 		stations,
 		points,
 		level,
