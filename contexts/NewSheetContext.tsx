@@ -4,6 +4,8 @@ type NewSheetContextType = {
 	step: number;
 	nextStep: () => void;
 	prevStep: () => void;
+	showPDFForm: boolean;
+	setShowPDFForm: React.Dispatch<React.SetStateAction<boolean>>;
 	rawData: RawData;
 	setRawData: React.Dispatch<React.SetStateAction<RawData>>;
 	processedData: ProcessedData;
@@ -14,18 +16,20 @@ const NewSheetContext = createContext<NewSheetContextType>({
 	step: 0,
 	nextStep: () => {},
 	prevStep: () => {},
+	showPDFForm: false,
+	setShowPDFForm: () => {},
 	rawData: {
 		title: "",
-		stationsDivision: 10,
+		stationsInterval: 10,
 		startStation: 0,
 		endStation: 0,
 		pointsWidth: 0,
-		sectionWidth: 0,
+		layerWidth: 0,
 		offset: 0,
 		slope: 0,
 		backsight: 0,
 		benchmark: 0,
-		thickness: 0,
+		layerThickness: 0,
 	},
 	setRawData: () => {},
 	processedData: {
@@ -47,18 +51,20 @@ export default function NewSheetProvider({ children }: NewSheetProviderProps) {
 	const nextStep = () => setStep((step) => step + 1);
 	const prevStep = () => setStep((step) => step - 1);
 
+	const [showPDFForm, setShowPDFForm] = useState(false);
+
 	const [rawData, setRawData] = useState<RawData>({
 		title: "",
-		stationsDivision: 10,
+		stationsInterval: 10,
 		startStation: 0,
 		endStation: 0,
 		pointsWidth: 0,
-		sectionWidth: 0,
+		layerWidth: 0,
 		offset: 0,
 		slope: 0,
 		backsight: 0,
 		benchmark: 0,
-		thickness: 0,
+		layerThickness: 0,
 	});
 
 	const [processedData, setProcessedData] = useState<ProcessedData>({
@@ -72,6 +78,8 @@ export default function NewSheetProvider({ children }: NewSheetProviderProps) {
 		step,
 		nextStep,
 		prevStep,
+		showPDFForm,
+		setShowPDFForm,
 		rawData,
 		setRawData,
 		processedData,

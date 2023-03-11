@@ -1,6 +1,6 @@
 import H2 from "@/components/H2";
-import BackButton from "@/components/Header/BackButton";
-import Header from "@/components/Header/Header";
+import BackButton from "@/components/Header/components/BackButton";
+import Header from "@/components/Header";
 import { useNewSheetContext } from "@/contexts/NewSheetContext";
 import { useSheetsContext } from "@/contexts/SheetsContext";
 import createCells from "@/utility/createCells";
@@ -42,6 +42,23 @@ export default function CreateSheetForm() {
 				className="p-4 flex flex-col justify-center gap-4"
 				onSubmit={handleSubmit}
 			>
+				<p>Title: {rawData.title}</p>
+				<p>Interval: {rawData.stationsInterval}</p>
+				<p>
+					From: {processedData.stationsLabels[0]} To:{" "}
+					{
+						processedData.stationsLabels[
+							processedData.stationsLabels.length - 1
+						]
+					}
+				</p>
+				<p>Points Width: {rawData.pointsWidth}</p>
+				<p>Layer Width: {rawData.layerWidth}</p>
+				<p>Offset: {rawData.offset}</p>
+				<p>Slope: {rawData.slope}</p>
+				<p>Backsight: {rawData.backsight}</p>
+				<p>Benchmark: {rawData.benchmark}</p>
+				<p>Layer Thickness {rawData.layerThickness}</p>
 				<FormButton>Create Sheet</FormButton>
 			</form>
 		</div>

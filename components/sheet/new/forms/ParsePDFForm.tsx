@@ -6,12 +6,13 @@ import { useState } from "react";
 import parsePDFStations from "@/utility/parsePDFStations";
 import validateForm from "@/utility/validateForm";
 import { useNewSheetContext } from "@/contexts/NewSheetContext";
-import Header from "@/components/Header/Header";
-import BackButton from "@/components/Header/BackButton";
+import Header from "@/components/Header";
+import BackButton from "@/components/Header/components/BackButton";
 import H2 from "@/components/H2";
 
 export default function ParsePDFForm() {
-	const { processedData, setProcessedData } = useNewSheetContext();
+	const { setShowPDFForm, processedData, setProcessedData } =
+		useNewSheetContext();
 
 	const schema = z.object({
 		file: z.object({
@@ -99,10 +100,16 @@ export default function ParsePDFForm() {
 			...prev,
 			stations,
 		}));
+
+		setShowPDFForm(false);
 	};
 
 	return (
 		<div className="max-w-lg m-auto">
+			<Header>
+				<BackButton onClick={() => setShowPDFForm(false)} />
+				<H2>Parse PDF</H2>
+			</Header>
 			<form
 				className="p-4 flex flex-col justify-center gap-4"
 				onSubmit={handleSubmit}

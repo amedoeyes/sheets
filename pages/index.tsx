@@ -3,10 +3,10 @@ import packageInfo from "@/package.json";
 import SheetCard from "@/components/home/SheetCard/SheetCard";
 import { FaFile } from "react-icons/fa";
 import { useSheetsContext } from "@/contexts/SheetsContext";
-import Header from "@/components/Header/Header";
+import Header from "@/components/Header";
 import H2 from "@/components/H2";
-import InstallButton from "@/components/Header/InstallButton";
-import NewSheetButton from "@/components/Header/NewSheetButton";
+import InstallButton from "@/components/Header/components/InstallButton";
+import NewSheetButton from "@/components/Header/components/NewSheetButton";
 
 export default function Home() {
 	const { sheets } = useSheetsContext();

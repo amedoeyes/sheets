@@ -6,8 +6,8 @@ import useFormReducer from "@/hooks/useFormReducer";
 import validateForm from "@/utility/validateForm";
 import processRawData from "@/utility/processRawData";
 import { useNewSheetContext } from "@/contexts/NewSheetContext";
-import BackButton from "@/components/Header/BackButton";
-import Header from "@/components/Header/Header";
+import BackButton from "@/components/Header/components/BackButton";
+import Header from "@/components/Header";
 import H2 from "@/components/H2";
 import { useRouter } from "next/router";
 
@@ -15,17 +15,17 @@ export default function RawDataForm() {
 	const { nextStep } = useNewSheetContext();
 	const { rawData, setRawData, setProcessedData } = useNewSheetContext();
 
-	const form = useFormReducer(
-		Object.fromEntries(
-			Object.entries(rawData).map(([key, value]) => [
-				key,
-				{
-					value: value === 0 ? "" : value.toString(),
-					message: "",
-				},
-			])
-		)
-	);
+	const initialFormState = Object.fromEntries(
+		Object.entries(rawData).map(([key, value]) => [
+			key,
+			{
+				value: value ? (value === 0 ? "" : value.toString()) : "",
+				message: "",
+			},
+		])
+	) as Record<keyof RawData, { value: string; message: string }>;
+
+	const form = useFormReducer(initialFormState);
 
 	const schema = z.object({
 		title: z.object({
@@ -33,7 +33,7 @@ export default function RawDataForm() {
 				message: "Required",
 			}),
 		}),
-		stationsDivision: z.object({
+		stationsInterval: z.object({
 			value: z.string().transform(Number),
 		}),
 		startStation: z.object({
@@ -48,9 +48,9 @@ export default function RawDataForm() {
 				})
 				.refine(
 					(value) =>
-						value % Number(form.state.stationsDivision.value) === 0,
+						value % Number(form.state.stationsInterval.value) === 0,
 					{
-						message: `Must be dividable by ${form.state.stationsDivision.value}`,
+						message: `Must be dividable by ${form.state.stationsInterval.value}`,
 					}
 				)
 				.refine(
@@ -73,9 +73,9 @@ export default function RawDataForm() {
 				})
 				.refine(
 					(value) =>
-						value % Number(form.state.stationsDivision.value) === 0,
+						value % Number(form.state.stationsInterval.value) === 0,
 					{
-						message: `Must be dividable by ${form.state.stationsDivision.value}`,
+						message: `Must be dividable by ${form.state.stationsInterval.value}`,
 					}
 				),
 		}),
@@ -90,7 +90,7 @@ export default function RawDataForm() {
 					message: "Must be a number",
 				}),
 		}),
-		sectionWidth: z.object({
+		layerWidth: z.object({
 			value: z
 				.string()
 				.refine((value) => value !== "", {
@@ -104,7 +104,7 @@ export default function RawDataForm() {
 		offset: z.object({
 			value: z
 				.string()
-				.transform((value) => -Number(value))
+				.transform(Number)
 				.refine((value) => !isNaN(value), {
 					message: "Must be a number",
 				}),
@@ -139,7 +139,7 @@ export default function RawDataForm() {
 					message: "Must be a number",
 				}),
 		}),
-		thickness: z.object({
+		layerThickness: z.object({
 			value: z
 				.string()
 				.transform(Number)
@@ -162,16 +162,16 @@ export default function RawDataForm() {
 
 		const rawData: RawData = {
 			title: validate.data.title.value,
-			stationsDivision: validate.data.stationsDivision.value,
+			stationsInterval: validate.data.stationsInterval.value,
 			startStation: validate.data.startStation.value,
 			endStation: validate.data.endStation.value,
 			pointsWidth: validate.data.pointsWidth.value,
-			sectionWidth: validate.data.sectionWidth.value,
+			layerWidth: validate.data.layerWidth.value,
 			offset: validate.data.offset.value,
 			slope: validate.data.slope.value,
 			backsight: validate.data.backsight.value,
 			benchmark: validate.data.benchmark.value,
-			thickness: validate.data.thickness.value,
+			layerThickness: validate.data.layerThickness.value,
 		};
 
 		setRawData(rawData);
@@ -197,17 +197,14 @@ export default function RawDataForm() {
 					onChange={handleChange}
 					message={form.state.title.message}
 				/>
-				<div className="flex gap-4">
-					<FormSelect
-						id="stationsDivision"
-						label="Division"
-						value={form.state.stationsDivision.value}
+				<div className="text-center flex items-end gap-4">
+					<FormInput
+						id="stationsInterval"
+						label="Interval"
+						value={form.state.stationsInterval.value}
 						onChange={handleChange}
-						message={form.state.stationsDivision.message}
-					>
-						<option value="10">10</option>
-						<option value="20">20</option>
-					</FormSelect>
+						message={form.state.stationsInterval.message}
+					/>
 					<FormInput
 						id="startStation"
 						label="Start Station"
@@ -225,7 +222,7 @@ export default function RawDataForm() {
 						message={form.state.endStation.message}
 					/>
 				</div>
-				<div className="flex gap-4">
+				<div className="text-center flex items-end gap-4">
 					<FormInput
 						id="pointsWidth"
 						label="Points Width"
@@ -235,15 +232,15 @@ export default function RawDataForm() {
 						message={form.state.pointsWidth.message}
 					/>
 					<FormInput
-						id="sectionWidth"
-						label="Section Width"
+						id="layerWidth"
+						label="Layer Width"
 						inputMode="decimal"
-						value={form.state.sectionWidth.value}
+						value={form.state.layerWidth.value}
 						onChange={handleChange}
-						message={form.state.sectionWidth.message}
+						message={form.state.layerWidth.message}
 					/>
 				</div>
-				<div className="flex gap-4">
+				<div className="text-center flex items-end gap-4">
 					<FormInput
 						id="offset"
 						label="Offset"
@@ -261,7 +258,7 @@ export default function RawDataForm() {
 						message={form.state.slope.message}
 					/>
 				</div>
-				<div className="flex gap-4">
+				<div className="text-center flex items-end gap-4">
 					<FormInput
 						id="backsight"
 						label="Backsight"
@@ -279,12 +276,12 @@ export default function RawDataForm() {
 						message={form.state.benchmark.message}
 					/>
 					<FormInput
-						id="thickness"
-						label="Thickness"
+						id="layerThickness"
+						label="Layer Thickness"
 						inputMode="decimal"
-						value={form.state.thickness.value}
+						value={form.state.layerThickness.value}
 						onChange={handleChange}
-						message={form.state.thickness.message}
+						message={form.state.layerThickness.message}
 					/>
 				</div>
 				<FormButton>Next</FormButton>

@@ -1,24 +1,29 @@
-import React, { useEffect } from "react";
 import FormButton from "@/components/sheet/new/FormButton";
 import FormInput from "@/components/sheet/new/FormInput";
 import validateForm from "@/utility/validateForm";
 import { z } from "zod";
 import useFormReducer from "@/hooks/useFormReducer";
 import { useNewSheetContext } from "@/contexts/NewSheetContext";
-import Header from "@/components/Header/Header";
-import BackButton from "@/components/Header/BackButton";
+import Header from "@/components/Header";
+import BackButton from "@/components/Header/components/BackButton";
 import H2 from "@/components/H2";
+import ParsePDFButton from "@/components/Header/components/ParsePDFButton";
 
 export default function StationsForm() {
-	const { nextStep, prevStep, processedData, setProcessedData } =
-		useNewSheetContext();
+	const {
+		nextStep,
+		prevStep,
+		setShowPDFForm,
+		processedData,
+		setProcessedData,
+	} = useNewSheetContext();
 
 	const form = useFormReducer(
 		Object.fromEntries(
-			processedData.stationsLabels.map((station) => [
-				station,
+			Object.entries(processedData.stations).map(([key, value]) => [
+				key,
 				{
-					value: "",
+					value: value ? (value === 0 ? "" : value.toString()) : "",
 					message: "",
 				},
 			])
@@ -71,6 +76,15 @@ export default function StationsForm() {
 
 	return (
 		<div className="max-w-lg m-auto">
+			<Header className="justify-between">
+				<div className="flex items-center gap-2">
+					<BackButton onClick={() => prevStep()} />
+					<H2>Stations Levels</H2>
+				</div>
+				<div>
+					<ParsePDFButton onClick={() => setShowPDFForm(true)} />
+				</div>
+			</Header>
 			<form
 				className="p-4 grid grid-cols-2 gap-4"
 				onSubmit={handleSubmit}

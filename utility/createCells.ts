@@ -8,14 +8,25 @@ export default function createCells(
 				value: Number(
 					(
 						processedData.level -
-						processedData.stations[station] +
+						(processedData.stations[station] +
+							rawData.layerThickness) +
 						(point / 100) * rawData.slope
 					).toFixed(3)
 				),
 				locked: true,
 			}))
 		)
-		.flatMap((row) => [
+		.flatMap((row, index) => [
+			processedData.stationsLabels.map((station) =>
+				processedData.points.map((point) => ({
+					value: Number(
+						processedData.stations[station] +
+							rawData.layerThickness +
+							(point / 100) * rawData.slope
+					).toFixed(3),
+					locked: true,
+				}))
+			)[index],
 			row,
 			processedData.points.map((_) => ({
 				value: "",

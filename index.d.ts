@@ -1,15 +1,15 @@
 declare type RawData = {
 	title: string;
-	stationsDivision: number;
+	stationsInterval: number;
 	startStation: number;
 	endStation: number;
 	pointsWidth: number;
-	sectionWidth: number;
+	layerWidth: number;
 	offset: number;
 	slope: number;
 	backsight: number;
 	benchmark: number;
-	thickness: number;
+	layerThickness: number;
 };
 
 declare type Stations = Record<string, number>;
