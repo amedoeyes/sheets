@@ -3,6 +3,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 type SheetsContextType = {
 	sheets: Sheets;
+	getSheet: (id: string) => Sheet | undefined;
 	addSheet: (sheet: Sheet) => void;
 	removeSheet: (id: string) => void;
 	updateSheet: (id: string, sheet: Sheet) => void;
@@ -10,6 +11,7 @@ type SheetsContextType = {
 
 const SheetsContext = createContext<SheetsContextType>({
 	sheets: [],
+	getSheet: (id: string) => undefined,
 	addSheet: () => {},
 	removeSheet: () => {},
 	updateSheet: () => {},
@@ -25,6 +27,8 @@ export default function SheetsProvider({
 	useEffect(() => {
 		sheetsDB.getAll().then((res) => setSheets(res));
 	}, []);
+
+	const getSheet = (id: string) => sheets.find((sheet) => sheet.id === id);
 
 	const addSheet = (newSheet: Sheet) => {
 		setSheets((prev) => [...prev, newSheet]);
@@ -45,6 +49,7 @@ export default function SheetsProvider({
 
 	const contextValue: SheetsContextType = {
 		sheets,
+		getSheet,
 		addSheet,
 		removeSheet,
 		updateSheet,

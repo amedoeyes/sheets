@@ -1,26 +1,34 @@
-import FormButton from "@/components/sheet/new/FormButton";
-import FormInput from "@/components/sheet/new/FormInput";
-import { z } from "zod";
+import { useSheetsContext } from "@/contexts/SheetsContext";
 import useFormReducer from "@/hooks/useFormReducer";
-import validateForm from "@/utility/validateForm";
+import createCells from "@/utility/createCells";
 import processRawData from "@/utility/processRawData";
-import { useNewSheetContext } from "@/contexts/NewSheetContext";
-import BackButton from "@/components/Header/components/BackButton";
-import Header from "@/components/Header";
-import H2 from "@/components/H2";
-import { useRouter } from "next/router";
-import Form from "@/components/Form";
+import validateForm from "@/utility/validateForm";
+import { z } from "zod";
+import Form from "../Form";
+import H2 from "../H2";
+import Header from "../Header";
+import BackButton from "../Header/components/BackButton";
+import Modal from "../Modal";
+import FormButton from "./new/FormButton";
+import FormInput from "./new/FormInput";
 
-export default function RawDataForm() {
-	const { nextStep } = useNewSheetContext();
-	const { rawData, setRawData, setProcessedData } = useNewSheetContext();
-	const router = useRouter();
+type EditSheetProps = {
+	setShowEditSheet: React.Dispatch<React.SetStateAction<boolean>>;
+	id: string;
+};
+
+export default function EditSheetForm({
+	setShowEditSheet,
+	id,
+}: EditSheetProps) {
+	const { getSheet, updateSheet } = useSheetsContext();
+	const sheet = getSheet(id)!;
 
 	const initialFormState = Object.fromEntries(
-		Object.entries(rawData).map(([key, value]) => [
+		Object.entries(sheet.rawData).map(([key, value]) => [
 			key,
 			{
-				value: value ? (value === 0 ? "" : value.toString()) : "",
+				value: value.toString(),
 				message: "",
 			},
 		])
@@ -33,52 +41,6 @@ export default function RawDataForm() {
 			value: z.string().refine((value) => value !== "", {
 				message: "Required",
 			}),
-		}),
-		stationsInterval: z.object({
-			value: z.string().transform(Number),
-		}),
-		startStation: z.object({
-			value: z
-				.string()
-				.refine((value) => value !== "", {
-					message: "Required",
-				})
-				.transform(Number)
-				.refine((value) => !isNaN(value), {
-					message: "Must be a number",
-				})
-				.refine(
-					(value) =>
-						value % Number(form.state.stationsInterval.value) === 0,
-					{
-						message: `Must be dividable by ${form.state.stationsInterval.value}`,
-					}
-				)
-				.refine(
-					(value) => value <= Number(form.state.endStation.value),
-					{
-						message:
-							"Start station can't be higher than end station",
-					}
-				),
-		}),
-		endStation: z.object({
-			value: z
-				.string()
-				.refine((value) => value !== "", {
-					message: "Required",
-				})
-				.transform(Number)
-				.refine((value) => !isNaN(value), {
-					message: "Must be a number",
-				})
-				.refine(
-					(value) =>
-						value % Number(form.state.stationsInterval.value) === 0,
-					{
-						message: `Must be dividable by ${form.state.stationsInterval.value}`,
-					}
-				),
 		}),
 		pointsWidth: z.object({
 			value: z
@@ -163,9 +125,9 @@ export default function RawDataForm() {
 
 		const rawData: RawData = {
 			title: validate.data.title.value,
-			stationsInterval: validate.data.stationsInterval.value,
-			startStation: validate.data.startStation.value,
-			endStation: validate.data.endStation.value,
+			stationsInterval: sheet.rawData.stationsInterval,
+			startStation: sheet.rawData.startStation,
+			endStation: sheet.rawData.endStation,
 			pointsWidth: validate.data.pointsWidth.value,
 			layerWidth: validate.data.layerWidth.value,
 			layerThickness: validate.data.layerThickness.value,
@@ -175,16 +137,27 @@ export default function RawDataForm() {
 			benchmark: validate.data.benchmark.value,
 		};
 
-		setRawData(rawData);
-		setProcessedData(processRawData(rawData));
-		nextStep();
+		const processedData = processRawData(rawData);
+		processedData.stations = sheet.processedData.stations;
+
+		const cells = createCells(rawData, processedData);
+
+		const newSheet: Sheet = {
+			...sheet,
+			cells,
+			processedData,
+			rawData,
+		};
+
+		updateSheet(id, newSheet);
+		setShowEditSheet(false);
 	};
 
 	return (
-		<div className="max-w-lg m-auto">
+		<Modal>
 			<Header>
-				<BackButton onClick={() => router.replace("/")} />
-				<H2>New Sheet</H2>
+				<BackButton onClick={() => setShowEditSheet(false)} />
+				<H2>Edit Sheet</H2>
 			</Header>
 			<Form onSubmit={handleSubmit}>
 				<FormInput
@@ -194,31 +167,6 @@ export default function RawDataForm() {
 					onChange={handleChange}
 					message={form.state.title.message}
 				/>
-				<div className="text-center flex items-end gap-4">
-					<FormInput
-						id="stationsInterval"
-						label="Interval"
-						value={form.state.stationsInterval.value}
-						onChange={handleChange}
-						message={form.state.stationsInterval.message}
-					/>
-					<FormInput
-						id="startStation"
-						label="Start Station"
-						inputMode="decimal"
-						value={form.state.startStation.value}
-						onChange={handleChange}
-						message={form.state.startStation.message}
-					/>
-					<FormInput
-						id="endStation"
-						label="End Station"
-						inputMode="decimal"
-						value={form.state.endStation.value}
-						onChange={handleChange}
-						message={form.state.endStation.message}
-					/>
-				</div>
 				<div className="text-center flex items-end gap-4">
 					<FormInput
 						id="pointsWidth"
@@ -281,8 +229,8 @@ export default function RawDataForm() {
 						message={form.state.benchmark.message}
 					/>
 				</div>
-				<FormButton>Next</FormButton>
+				<FormButton>Edit</FormButton>
 			</Form>
-		</div>
+		</Modal>
 	);
 }

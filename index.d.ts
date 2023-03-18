@@ -41,7 +41,6 @@ declare type Cells = Array<Array<Cell>>;
 
 declare type Sheet = {
 	id: string;
-	title: string;
 	creationDate: Date;
 	cells: Cells;
 	processedData: ProcessedData;

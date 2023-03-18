@@ -40,7 +40,7 @@ export default function EditableCell({
 	return (
 		<Cell>
 			<input
-				className="h-full w-full outline-neutral-500"
+				className="h-full w-full outline-primary600"
 				data-row-index={rowIndex}
 				data-col-index={colIndex}
 				type="text"

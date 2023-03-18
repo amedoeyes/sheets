@@ -31,9 +31,10 @@ export default function FormInput({
 }: FormInputProps) {
 	return (
 		<div className="flex flex-col items-center gap-4">
-			<label className="text-lg" htmlFor={id}>
+			<label className="text-lg flex items-center" htmlFor={id}>
 				{label}
 			</label>
+			{message && <p className="text-red-400">{message}</p>}
 			<input
 				id={id}
 				className={`bg-primary100 w-full h-12 p-2 text-center rounded-3xl outline-none ${className}`}
@@ -43,7 +44,6 @@ export default function FormInput({
 				value={value}
 				onChange={onChange}
 			/>
-			{message && <p className="text-red-400">{message}</p>}
 		</div>
 	);
 }

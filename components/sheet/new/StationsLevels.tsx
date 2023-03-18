@@ -5,5 +5,10 @@ import StationsForm from "./forms/StationsForm";
 export default function StationsLevels() {
 	const { showPDFForm } = useNewSheetContext();
 
-	return showPDFForm === true ? <ParsePDFForm /> : <StationsForm />;
+	return (
+		<>
+			{showPDFForm && <ParsePDFForm />}
+			<StationsForm />
+		</>
+	);
 }

@@ -7,6 +7,7 @@ import createCells from "@/utility/createCells";
 import { useRouter } from "next/router";
 import { v4 as uuidv4 } from "uuid";
 import FormButton from "../FormButton";
+import Form from "@/components/Form";
 
 export default function CreateSheetForm() {
 	const { prevStep, rawData, processedData } = useNewSheetContext();
@@ -21,7 +22,6 @@ export default function CreateSheetForm() {
 
 		const newSheet: Sheet = {
 			id: id,
-			title: rawData.title,
 			creationDate: new Date(),
 			cells: cells,
 			rawData,
@@ -38,10 +38,7 @@ export default function CreateSheetForm() {
 				<BackButton onClick={prevStep} />
 				<H2>Create Sheet</H2>
 			</Header>
-			<form
-				className="p-4 flex flex-col justify-center gap-4"
-				onSubmit={handleSubmit}
-			>
+			<Form onSubmit={handleSubmit}>
 				<p>Title: {rawData.title}</p>
 				<p>Interval: {rawData.stationsInterval}</p>
 				<p>
@@ -58,9 +55,9 @@ export default function CreateSheetForm() {
 				<p>Slope: {rawData.slope}</p>
 				<p>Backsight: {rawData.backsight}</p>
 				<p>Benchmark: {rawData.benchmark}</p>
-				<p>Layer Thickness {rawData.layerThickness}</p>
+				<p>Layer Thickness: {rawData.layerThickness}</p>
 				<FormButton>Create Sheet</FormButton>
-			</form>
+			</Form>
 		</div>
 	);
 }

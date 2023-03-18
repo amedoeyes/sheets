@@ -6,7 +6,7 @@ type HeaderCellProps = {
 
 export default function HeaderCell({ children }: HeaderCellProps) {
 	return (
-		<Cell className="text-center bg-neutral-200 text-opacity-75 font-semibold border select-none">
+		<Cell className="bg-primary200 text-center text-opacity-75 font-semibold">
 			{children}
 		</Cell>
 	);

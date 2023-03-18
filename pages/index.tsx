@@ -1,6 +1,6 @@
 import Head from "next/head";
 import packageInfo from "@/package.json";
-import SheetCard from "@/components/home/SheetCard/SheetCard";
+import SheetCard from "@/components/SheetCard/SheetCard";
 import { FaFile } from "react-icons/fa";
 import { useSheetsContext } from "@/contexts/SheetsContext";
 import Header from "@/components/Header";
@@ -45,7 +45,7 @@ export default function Home() {
 						<SheetCard
 							key={sheet.id}
 							id={sheet.id}
-							title={sheet.title}
+							title={sheet.rawData.title}
 							stationsLabels={sheet.processedData.stationsLabels}
 							creationDate={sheet.creationDate}
 						/>

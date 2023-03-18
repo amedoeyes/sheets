@@ -8,6 +8,8 @@ import Header from "@/components/Header";
 import BackButton from "@/components/Header/components/BackButton";
 import H2 from "@/components/H2";
 import ParsePDFButton from "@/components/Header/components/ParsePDFButton";
+import Form from "@/components/Form";
+import { useEffect } from "react";
 
 export default function StationsForm() {
 	const {
@@ -29,6 +31,16 @@ export default function StationsForm() {
 			])
 		)
 	);
+
+	useEffect(() => {
+		processedData.stationsLabels.forEach((station) => {
+			const value = processedData.stations[station];
+			form.setValueOf(
+				station,
+				value ? (value === 0 ? "" : value.toString()) : ""
+			);
+		});
+	}, [processedData.stations]);
 
 	const schema = z.object(
 		Object.fromEntries(
@@ -85,10 +97,7 @@ export default function StationsForm() {
 					<ParsePDFButton onClick={() => setShowPDFForm(true)} />
 				</div>
 			</Header>
-			<form
-				className="p-4 grid grid-cols-2 gap-4"
-				onSubmit={handleSubmit}
-			>
+			<Form className="grid grid-cols-2" onSubmit={handleSubmit}>
 				{processedData.stationsLabels.map((station) => (
 					<FormInput
 						key={station}
@@ -101,7 +110,7 @@ export default function StationsForm() {
 					/>
 				))}
 				<FormButton className="col-span-2">Next</FormButton>
-			</form>
+			</Form>
 		</div>
 	);
 }

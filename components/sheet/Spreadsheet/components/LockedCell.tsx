@@ -5,5 +5,5 @@ type LockedCellProps = {
 };
 
 export default function LockedCell({ children }: LockedCellProps) {
-	return <Cell className="bg-neutral-300">{children}</Cell>;
+	return <Cell className="bg-primary100">{children}</Cell>;
 }

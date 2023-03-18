@@ -19,32 +19,34 @@ export default function SpreadSheet({
 	colHeader,
 }: SpreadsheetProps) {
 	return (
-		<table className="w-max">
-			<tbody>
-				<RowHeader rowHeader={rowHeader} cells={cells} />
-				{cells.map((row, rowIndex) => (
-					<tr key={rowIndex}>
-						<HeaderCell>
-							{colHeader ? colHeader[rowIndex] : rowIndex + 1}
-						</HeaderCell>
-						{row.map((col, colIndex) =>
-							col.locked ? (
-								<LockedCell key={colIndex}>
-									{col.value}
-								</LockedCell>
-							) : (
-								<EditableCell
-									key={colIndex}
-									rowIndex={rowIndex}
-									colIndex={colIndex}
-									cells={cells}
-									onChange={onChange}
-								></EditableCell>
-							)
-						)}
-					</tr>
-				))}
-			</tbody>
-		</table>
+		<div className="overflow-auto">
+			<table className="w-max">
+				<tbody>
+					<RowHeader rowHeader={rowHeader} cells={cells} />
+					{cells.map((row, rowIndex) => (
+						<tr key={rowIndex}>
+							<HeaderCell>
+								{colHeader ? colHeader[rowIndex] : rowIndex + 1}
+							</HeaderCell>
+							{row.map((col, colIndex) =>
+								col.locked ? (
+									<LockedCell key={colIndex}>
+										{col.value}
+									</LockedCell>
+								) : (
+									<EditableCell
+										key={colIndex}
+										rowIndex={rowIndex}
+										colIndex={colIndex}
+										cells={cells}
+										onChange={onChange}
+									></EditableCell>
+								)
+							)}
+						</tr>
+					))}
+				</tbody>
+			</table>
+		</div>
 	);
 }

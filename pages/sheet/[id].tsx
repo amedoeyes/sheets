@@ -5,10 +5,14 @@ import BackButton from "@/components/Header/components/BackButton";
 import Header from "@/components/Header";
 import H2 from "@/components/H2";
 import Head from "next/head";
+import EditSheetButton from "@/components/Header/components/EditSheetButton";
+import { useState } from "react";
+import EditSheetForm from "@/components/sheet/EditSheetForm";
 
 export default function Sheet() {
 	const { sheets, updateSheet } = useSheetsContext();
 	const router = useRouter();
+	const [showEditSheet, setShowEditSheet] = useState(false);
 	if (!router.isReady) return <></>;
 
 	const id = router.query.id!.toString();
@@ -25,24 +29,30 @@ export default function Sheet() {
 	return (
 		<>
 			<Head>
-				<title>{sheet.title}</title>
+				<title>{sheet.rawData.title}</title>
 				<meta
 					name="viewport"
 					content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"
 				/>
 			</Head>
-			<div className="overflow-auto">
-				<Header>
-					<BackButton onClick={() => router.back()} />
-					<H2 className="ml-4">{sheet.title}</H2>
-				</Header>
-				<Spreadsheet
-					cells={sheet.cells}
-					onChange={onChange}
-					rowHeader={sheet.processedData.points}
-					colHeader={stationsHeader}
-				/>
-			</div>
+			<Header className="justify-between">
+				<div className="flex items-center gap-2">
+					<BackButton onClick={() => router.replace("/")} />
+					<H2>{sheet.rawData.title}</H2>
+				</div>
+				<div>
+					<EditSheetButton onclick={() => setShowEditSheet(true)} />
+				</div>
+			</Header>
+			{showEditSheet && (
+				<EditSheetForm setShowEditSheet={setShowEditSheet} id={id} />
+			)}
+			<Spreadsheet
+				cells={sheet.cells}
+				onChange={onChange}
+				rowHeader={sheet.processedData.points}
+				colHeader={stationsHeader}
+			/>
 		</>
 	);
 }

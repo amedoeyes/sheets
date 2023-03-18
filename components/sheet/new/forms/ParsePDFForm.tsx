@@ -9,10 +9,17 @@ import { useNewSheetContext } from "@/contexts/NewSheetContext";
 import Header from "@/components/Header";
 import BackButton from "@/components/Header/components/BackButton";
 import H2 from "@/components/H2";
+import Form from "@/components/Form";
+import Modal from "@/components/Modal";
 
 export default function ParsePDFForm() {
 	const { setShowPDFForm, processedData, setProcessedData } =
 		useNewSheetContext();
+
+	const form = useFormReducer({
+		file: { value: "", message: "" },
+		column: { value: "", message: "" },
+	});
 
 	const schema = z.object({
 		file: z.object({
@@ -33,11 +40,6 @@ export default function ParsePDFForm() {
 					message: "Must be a number",
 				}),
 		}),
-	});
-
-	const form = useFormReducer({
-		file: { value: "", message: "" },
-		column: { value: "", message: "" },
 	});
 
 	const [parsing, setParsing] = useState(false);
@@ -105,15 +107,12 @@ export default function ParsePDFForm() {
 	};
 
 	return (
-		<div className="max-w-lg m-auto">
+		<Modal>
 			<Header>
 				<BackButton onClick={() => setShowPDFForm(false)} />
 				<H2>Parse PDF</H2>
 			</Header>
-			<form
-				className="p-4 flex flex-col justify-center gap-4"
-				onSubmit={handleSubmit}
-			>
+			<Form onSubmit={handleSubmit}>
 				<div className="flex gap-4">
 					<FormInput
 						className="file:hidden text-start"
@@ -135,7 +134,7 @@ export default function ParsePDFForm() {
 				<FormButton disabled={parsing}>
 					{parsing ? "Parsing..." : "Parse"}
 				</FormButton>
-			</form>
-		</div>
+			</Form>
+		</Modal>
 	);
 }

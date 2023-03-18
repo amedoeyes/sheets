@@ -6,7 +6,7 @@ type CellProps = {
 export default function Cell({ className, children }: CellProps) {
 	return (
 		<td
-			className={`h-10 w-24 bg-wite text-black border border-neutral-400 ${className}`}
+			className={`bg-primary text-secondary h-10 w-24 border border-primary300 ${className}`}
 		>
 			{children}
 		</td>

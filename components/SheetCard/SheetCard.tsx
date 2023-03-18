@@ -15,7 +15,7 @@ export default function SheetCard({
 	stationsLabels,
 }: SheetCardProps) {
 	return (
-		<div className="bg-primary w-full flex justify-center relative shadow-md rounded-3xl active:shadow-sm">
+		<div className="bg-primary w-full flex justify-center relative shadow-md rounded-3xl">
 			<DeleteSheetButton id={id} />
 			<SheetButton
 				title={title}
