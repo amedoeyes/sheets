@@ -64,6 +64,7 @@ export default function Sheet({ params }: { params: { id: string } }) {
 
 				<Container
 					sx={{
+						maxWidth: "100%",
 						padding: "1rem",
 						margin: "0",
 						overflowX: "auto",
@@ -110,6 +111,7 @@ export default function Sheet({ params }: { params: { id: string } }) {
 
 			<Container
 				sx={{
+					maxWidth: "auto",
 					padding: "1rem",
 					margin: "0",
 					overflowX: "auto",
