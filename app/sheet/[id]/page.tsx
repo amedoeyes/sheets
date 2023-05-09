@@ -62,11 +62,10 @@ export default function Sheet({ params }: { params: { id: string } }) {
 					</Stack>
 				</Header>
 
-				<Container
+				<Box
 					sx={{
-						maxWidth: "100%",
+						width: "100%",
 						padding: "1rem",
-						margin: "0",
 						overflowX: "auto",
 					}}
 				>
@@ -78,7 +77,7 @@ export default function Sheet({ params }: { params: { id: string } }) {
 							borderRadius: "0.25rem",
 						}}
 					/>
-				</Container>
+				</Box>
 			</>
 		);
 
@@ -109,11 +108,10 @@ export default function Sheet({ params }: { params: { id: string } }) {
 				</div>
 			</Header>
 
-			<Container
+			<Box
 				sx={{
-					maxWidth: "auto",
+					width: "100%",
 					padding: "1rem",
-					margin: "0",
 					overflowX: "auto",
 				}}
 			>
@@ -128,7 +126,7 @@ export default function Sheet({ params }: { params: { id: string } }) {
 						/>
 					</Box>
 				</Fade>
-			</Container>
+			</Box>
 
 			<Modal open={showEditSheetForm}>
 				<Slide direction="left" in={showEditSheetForm}>
@@ -156,7 +154,7 @@ export default function Sheet({ params }: { params: { id: string } }) {
 						<Container
 							maxWidth="sm"
 							sx={{
-								marginTop: "1rem",
+								padding: "1rem",
 							}}
 						>
 							<EditSheetForm nextStep={closeEditSheetForm} />
