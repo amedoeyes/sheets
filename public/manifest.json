@@ -1,7 +1,8 @@
 {
 	"name": "Sheets",
-	"theme_color": "#ffffff",
-	"background_color": "#ffffff",
+	"description": "PWA for creating, calculating, and managing survey roads spreadsheets.",
+	"theme_color": "#000000",
+	"background_color": "#000000",
 	"display": "standalone",
 	"orientation": "portrait",
 	"scope": "/",
