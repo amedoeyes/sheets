@@ -29,12 +29,12 @@ export default function NewSheetButton() {
 		<HideOnScroll>
 			<Fade in={true} timeout={1000}>
 				<Box
-					height="100%"
 					width="100%"
+					height="100svh"
 					position="fixed"
-					top={0}
-					right={0}
-					zIndex={1}
+					top="0"
+					right="0"
+					zIndex="1"
 					sx={{
 						pointerEvents: "none",
 					}}

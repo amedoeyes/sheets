@@ -39,17 +39,17 @@ export default function SheetsCards() {
 			))}
 		</Grid>
 	) : sheets.length === 0 ? (
-		<Box
-			position="absolute"
-			top="0"
-			left="0"
-			width="100%"
-			height="100%"
-			display="flex"
-			alignItems="center"
-			justifyContent="center"
-		>
-			<Stack alignItems="center" sx={{ opacity: "0.25" }}>
+		<Box height="100%" width="100%" position="absolute" top="0" right="0">
+			<Stack
+				width="100%"
+				height="100svh"
+				alignItems="center"
+				justifyContent="center"
+				position="absolute"
+				top={0}
+				right={0}
+				sx={{ opacity: "0.25" }}
+			>
 				<Inventory2Outlined
 					style={{
 						width: "8rem",
