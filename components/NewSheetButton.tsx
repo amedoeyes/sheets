@@ -30,7 +30,8 @@ export default function NewSheetButton() {
 			<Fade in={true} timeout={1000}>
 				<Box
 					width="100%"
-					height="100svh"
+					maxHeight="100svh"
+					height="100vh"
 					position="fixed"
 					top="0"
 					right="0"

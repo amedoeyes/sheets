@@ -42,7 +42,8 @@ export default function SheetsCards() {
 		<Box height="100%" width="100%" position="absolute" top="0" right="0">
 			<Stack
 				width="100%"
-				height="100svh"
+				maxHeight="100svh"
+				height="100vh"
 				alignItems="center"
 				justifyContent="center"
 				position="absolute"
