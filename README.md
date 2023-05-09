@@ -7,27 +7,32 @@
 	<a href="https://amedoeyes-sheets.vercel.app">Deployed Project</a>
 </p>
 
----
+<p align="center">
+! Offline capability will not work due to a Next.js bug !
+</p>
 
-###TODO
+### TODO
 
 -   Arabic localization
 -   3D visualization
 -   Testing
 
-###Running the Development Environment
+### Running the Development Environment
+
 To run the development environment, use the following command in your terminal:
 
 ```bash
 npm run dev
 ```
 
-###Building and Starting the Server
+### Building and Starting the Server
+
 To build and start the server, use the following commands in your terminal:
 
 ```bash
 npm run build && npm start
 ```
 
-###License
+### License
+
 This project is licensed under the AGPLv3 License - see the [LICENSE](LICENSE) file for details.
