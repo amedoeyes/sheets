@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import "./globals.css";
 import Providers from "./providers";
-import Pwa from "./pwa";
 
 type RootLayoutProps = {
 	children: React.ReactNode;
@@ -20,7 +19,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
 		<html lang="en" suppressHydrationWarning>
 			<body>
 				<Providers>{children}</Providers>
-				<Pwa />
 			</body>
 		</html>
 	);
