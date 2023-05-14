@@ -3,6 +3,7 @@ const isDev = process.env.NODE_ENV === "development";
 /** @type {import('next').NextConfig} */
 const nextConfig = {
 	reactStrictMode: true,
+	output: "export",
 	transpilePackages: ["@mui/material", "@mui/icons-material"],
 	modularizeImports: {
 		"@mui/material": {

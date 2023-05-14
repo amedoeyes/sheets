@@ -7,10 +7,6 @@
 	<a href="https://amedoeyes-sheets.vercel.app">Deployed Project</a>
 </p>
 
-<p align="center">
-! Offline capability will not work due to a Next.js bug !
-</p>
-
 ### TODO
 
 -   Arabic localization
