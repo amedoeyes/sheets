@@ -94,9 +94,7 @@ const formLayout = [
 
 export default function RawDataForm({ nextStep, prevStep }: RawDataFormProps) {
 	const dispatch = useDispatch<AppDispatch>();
-	const { title, rawData } = useSelector(
-		(state: RootState) => state.newSheet
-	);
+	const { title, rawData } = useSelector((state: RootState) => state.newSheet);
 
 	const initialValues = {
 		title: title ? title : "",
@@ -125,11 +123,8 @@ export default function RawDataForm({ nextStep, prevStep }: RawDataFormProps) {
 				.string()
 				.refine((value) => !isNaN(Number(value)), "Must be a number")
 				.refine(
-					(value) =>
-						Number(value) %
-							Number(formik.values.stationsInterval) ===
-						0,
-					"Must be dividable by stations interval"
+					(value) => Number(value) % Number(formik.values.stationsInterval) === 0,
+					"Must be dividable by stations interval",
 				)
 				.refine((value) => Number(value) >= 0, "Must be positive"),
 
@@ -137,16 +132,12 @@ export default function RawDataForm({ nextStep, prevStep }: RawDataFormProps) {
 				.string()
 				.refine((value) => !isNaN(Number(value)), "Must be a number")
 				.refine(
-					(value) =>
-						Number(value) %
-							Number(formik.values.stationsInterval) ===
-						0,
-					"Must be dividable by stations interval"
+					(value) => Number(value) % Number(formik.values.stationsInterval) === 0,
+					"Must be dividable by stations interval",
 				)
 				.refine(
-					(value) =>
-						Number(value) >= Number(formik.values.startStation),
-					"Must be greater or equal to start station"
+					(value) => Number(value) >= Number(formik.values.startStation),
+					"Must be greater or equal to start station",
 				)
 				.refine((value) => Number(value) >= 0, "Must be positive"),
 
@@ -159,9 +150,8 @@ export default function RawDataForm({ nextStep, prevStep }: RawDataFormProps) {
 				.string()
 				.refine((value) => !isNaN(Number(value)), "Must be a number")
 				.refine(
-					(value) =>
-						Number(value) >= Number(formik.values.pointsWidth),
-					"Must be greater or equal to points width"
+					(value) => Number(value) >= Number(formik.values.pointsWidth),
+					"Must be greater or equal to points width",
 				)
 				.refine((value) => Number(value) >= 0, "Must be positive"),
 
@@ -179,7 +169,6 @@ export default function RawDataForm({ nextStep, prevStep }: RawDataFormProps) {
 			slope: z
 				.string()
 				.refine((value) => !isNaN(Number(value)), "Must be a number")
-				.refine((value) => Number(value) >= 0, "Must be positive")
 				.optional(),
 
 			backsight: z
@@ -191,7 +180,7 @@ export default function RawDataForm({ nextStep, prevStep }: RawDataFormProps) {
 				.string()
 				.refine((value) => !isNaN(Number(value)), "Must be a number")
 				.refine((value) => Number(value) >= 0, "Must be positive"),
-		})
+		}),
 	);
 
 	const handleSubmit = (values: typeof initialValues) => {
@@ -227,9 +216,7 @@ export default function RawDataForm({ nextStep, prevStep }: RawDataFormProps) {
 						<TextField
 							key={input.id}
 							inputProps={{
-								inputMode: input.inputMode as
-									| "decimal"
-									| "text",
+								inputMode: input.inputMode as "decimal" | "text",
 							}}
 							InputProps={{
 								sx: {
@@ -240,40 +227,24 @@ export default function RawDataForm({ nextStep, prevStep }: RawDataFormProps) {
 							variant="outlined"
 							id={input.id}
 							label={input.label}
-							value={
-								formik.values[
-									input.id as keyof typeof formik.values
-								]
-							}
+							value={formik.values[input.id as keyof typeof formik.values]}
 							onChange={formik.handleChange}
 							onBlur={formik.handleBlur}
 							error={
-								formik.touched[
-									input.id as keyof typeof formik.touched
-								] &&
-								Boolean(
-									formik.errors[
-										input.id as keyof typeof formik.errors
-									]
-								)
+								formik.touched[input.id as keyof typeof formik.touched] &&
+								Boolean(formik.errors[input.id as keyof typeof formik.errors])
 							}
 							helperText={
-								formik.touched[
-									input.id as keyof typeof formik.touched
-								] &&
-								formik.errors[
-									input.id as keyof typeof formik.errors
-								]
-									? formik.errors[
-											input.id as keyof typeof formik.errors
-									  ]
+								formik.touched[input.id as keyof typeof formik.touched] &&
+								formik.errors[input.id as keyof typeof formik.errors]
+									? formik.errors[input.id as keyof typeof formik.errors]
 									: input.textHelper
 							}
 						/>
 					))}
 				</Stack>
 			)),
-		[formik.values, formik.touched, formik.errors]
+		[formik.values, formik.touched, formik.errors],
 	);
 
 	return (

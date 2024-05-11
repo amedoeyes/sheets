@@ -74,10 +74,7 @@ const formLayout = [
 	],
 ];
 
-export default function EditSheetForm({
-	nextStep,
-	prevStep,
-}: EditSheetFormProps) {
+export default function EditSheetForm({ nextStep, prevStep }: EditSheetFormProps) {
 	const dispatch = useDispatch<AppDispatch>();
 	const { sheet } = useSelector((state: RootState) => state.sheet);
 
@@ -105,9 +102,8 @@ export default function EditSheetForm({
 				.string()
 				.refine((value) => !isNaN(Number(value)), "Must be a number")
 				.refine(
-					(value) =>
-						Number(value) >= Number(formik.values.pointsWidth),
-					"Must be greater or equal to points width"
+					(value) => Number(value) >= Number(formik.values.pointsWidth),
+					"Must be greater or equal to points width",
 				)
 				.refine((value) => Number(value) >= 0, "Must be positive"),
 
@@ -124,7 +120,6 @@ export default function EditSheetForm({
 			slope: z
 				.string()
 				.refine((value) => !isNaN(Number(value)), "Must be a number")
-				.refine((value) => Number(value) >= 0, "Must be positive")
 				.optional(),
 
 			backsight: z
@@ -136,7 +131,7 @@ export default function EditSheetForm({
 				.string()
 				.refine((value) => !isNaN(Number(value)), "Must be a number")
 				.refine((value) => Number(value) >= 0, "Must be positive"),
-		})
+		}),
 	);
 
 	const handleSubmit = (values: typeof initialValues) => {
@@ -153,17 +148,14 @@ export default function EditSheetForm({
 			benchmark: Number(values.benchmark),
 		};
 
-		const processedData = processRawData(
-			rawData,
-			sheet!.processedData.stations
-		);
+		const processedData = processRawData(rawData, sheet!.processedData.stations);
 
 		const cells = createStationsCells(
 			processedData.stations,
 			processedData.points,
 			processedData.level,
 			rawData.layerHeight,
-			rawData.slope
+			rawData.slope,
 		);
 
 		const updatedSheet: Sheet = {
@@ -192,9 +184,7 @@ export default function EditSheetForm({
 						<TextField
 							key={input.id}
 							inputProps={{
-								inputMode: input.inputMode as
-									| "decimal"
-									| "text",
+								inputMode: input.inputMode as "decimal" | "text",
 							}}
 							InputProps={{
 								sx: {
@@ -205,40 +195,24 @@ export default function EditSheetForm({
 							variant="outlined"
 							id={input.id}
 							label={input.label}
-							value={
-								formik.values[
-									input.id as keyof typeof formik.values
-								]
-							}
+							value={formik.values[input.id as keyof typeof formik.values]}
 							onChange={formik.handleChange}
 							onBlur={formik.handleBlur}
 							error={
-								formik.touched[
-									input.id as keyof typeof formik.touched
-								] &&
-								Boolean(
-									formik.errors[
-										input.id as keyof typeof formik.errors
-									]
-								)
+								formik.touched[input.id as keyof typeof formik.touched] &&
+								Boolean(formik.errors[input.id as keyof typeof formik.errors])
 							}
 							helperText={
-								formik.touched[
-									input.id as keyof typeof formik.touched
-								] &&
-								formik.errors[
-									input.id as keyof typeof formik.errors
-								]
-									? formik.errors[
-											input.id as keyof typeof formik.errors
-									  ]
+								formik.touched[input.id as keyof typeof formik.touched] &&
+								formik.errors[input.id as keyof typeof formik.errors]
+									? formik.errors[input.id as keyof typeof formik.errors]
 									: input.textHelper
 							}
 						/>
 					))}
 				</Stack>
 			)),
-		[formik.values, formik.touched, formik.errors]
+		[formik.values, formik.touched, formik.errors],
 	);
 
 	return (
