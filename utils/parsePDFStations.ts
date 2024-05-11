@@ -11,58 +11,45 @@ type ParsingStatus = {
 export default async function parsePDFStations(
 	file: ArrayBuffer,
 	column: number,
-	parsingStatusCallback?: (parsingStatus: ParsingStatus) => void
+	parsingStatusCallback?: (parsingStatus: ParsingStatus) => void,
 ): Promise<Stations> {
 	const stations: Stations = {};
 
 	try {
-		parsingStatusCallback?.({
-			isParsing: true,
-			progress: 0,
-		});
+		parsingStatusCallback?.({ isParsing: true, progress: 0 });
 
 		const doc = await pdfjs.getDocument(file).promise;
 
-		for (let currentPage = 1; currentPage <= doc.numPages; currentPage++) {
-			const page = await doc.getPage(currentPage);
+		for (let i = 1; i <= doc.numPages; i++) {
+			const page = await doc.getPage(i);
 			const textContent = await page.getTextContent();
 
-			let currentStationName = "";
-			let currentRowText = "";
+			let station = "";
+			let rowText = "";
 
 			for (const item of textContent.items) {
 				if ("str" in item) {
-					const stationRegex = /^([0-9]+)\+([0-9]{3})/;
-					const match = stationRegex.exec(item.str);
+					const match = /^([0-9]+)\+([0-9]{3})/.exec(item.str);
 
 					if (match) {
-						currentStationName = `${match[1]}+${match[2]}`;
-						currentRowText = "";
+						station = `${Number(match[1])}+${match[2]}`;
+						rowText = "";
 					}
 
-					currentRowText += item.str;
-					const levelColumn = currentRowText.split(" ")[column - 1];
+					rowText += item.str;
+					const level = rowText.split(" ")[column - 1];
+					console.log(station, level);
 
-					if (currentStationName && Number(levelColumn))
-						stations[currentStationName] = Number(levelColumn);
+					if (station && Number(level)) stations[station] = Number(level);
 				}
 			}
 
-			parsingStatusCallback?.({
-				isParsing: true,
-				progress: (currentPage / doc.numPages) * 100,
-			});
+			parsingStatusCallback?.({ isParsing: true, progress: (i / doc.numPages) * 100 });
 		}
-		parsingStatusCallback?.({
-			isParsing: false,
-			progress: 100,
-		});
+		parsingStatusCallback?.({ isParsing: false, progress: 100 });
 	} catch (error) {
 		console.error(error);
-		parsingStatusCallback?.({
-			isParsing: false,
-			progress: 0,
-		});
+		parsingStatusCallback?.({ isParsing: false, progress: 0 });
 	}
 
 	return stations;
